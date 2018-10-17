@@ -38,7 +38,7 @@ async function createJson () {
   return jsonObj;
 }
 
-router.get('/coursecode', async (ctx) => {
+router.get('/api/', async (ctx) => {
   ctx.body = await createJson();
 });
 
