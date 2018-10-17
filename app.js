@@ -38,7 +38,7 @@ async function createJson () {
   return jsonObj;
 }
 
-router.get('/timetable', async (ctx) => {
+router.get('/coursecode', async (ctx) => {
   ctx.body = await createJson();
 });
 
