@@ -7,7 +7,7 @@ const app = new Koa();
 const router = new KoaRouter();
 
 const groupCode = 'SG_KSDEV_B07';
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(KoaJson());
 
