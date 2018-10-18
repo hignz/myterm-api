@@ -14,7 +14,7 @@
     "koa-router": "^7.4.0",
     "tabletojson": "^0.9.8"
   },
-  "engines": {
+ "engines": {
     "node": "10.12.0"
   },
   "devDependencies": {
