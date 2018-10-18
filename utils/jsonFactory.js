@@ -26,11 +26,8 @@ module.exports = async (courseCode) => {
   }
 
   if (Object.keys(jsonObj.timetable[4]).length === 0) {
-    console.log(Array.isArray(jsonObj.timetable[4]));
     jsonObj.timetable.splice(4, 1);
-    console.log(jsonObj.timetable[0].length);
   }
 
-  console.log(jsonObj);
   return jsonObj;
 };
