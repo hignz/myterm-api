@@ -1,20 +1,21 @@
 {
   "name": "itsligo-timetable-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js"
   },
-  "author": "",
+  "author": "hignz",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^2.2.2",
     "koa": "^2.5.3",
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
     "tabletojson": "^0.9.8"
   },
- "engines": {
+  "engines": {
     "node": "10.12.0"
   },
   "devDependencies": {
