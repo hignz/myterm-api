@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "@koa/cors": "^2.2.2",
+    "cheerio": "^1.0.0-rc.2",
+    "got": "^9.2.2",
     "koa": "^2.5.3",
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
