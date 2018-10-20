@@ -6,6 +6,8 @@ const url = 'https://www.itsligo.ie/student-hub/lecture-rooms/';
 module.exports = async () => {
   const { body } = await got(url);
 
+  console.log(body);
+
   const $ = cheerio.load(body);
 
   const json = {};
