@@ -15,6 +15,8 @@ module.exports = async (courseCode) => {
       [day]: [],
     });
 
+    console.log('sd');
+
     for (let entry = 1; entry < json[d].length; entry += 1) {
       if (json[d][entry][2] === '' || json[d][entry][5] === '' || json[d][entry][0] === '') { continue; }
       jsonObj.timetable[d - 8][day].push({
