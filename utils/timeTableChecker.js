@@ -1,5 +1,6 @@
 const urlFactory = require('./urlFactory');
 const tabletojson = require('tabletojson');
+const getDay = require('../utils/intToDay');
 
 module.exports = async (courseCode) => {
   const json = await tabletojson.convertUrl(urlFactory(courseCode));
@@ -7,22 +8,24 @@ module.exports = async (courseCode) => {
   const jsonObj = {};
   jsonObj.timetable = [];
 
-  let counter = 0;
+  for (let d = 8; d < 13; d += 1) {
+    const day = getDay(d - 7);
 
-  for (let day = 8; day < 13; day += 1) {
-    jsonObj.timetable.push([]);
-    for (let entry = 1; entry < json[day].length; entry += 1) {
-      if (json[day][entry][2] === '' || json[day][entry][5] === '' || json[day][entry][0] === '') continue;
-      jsonObj.timetable[counter].push({
-        name: json[day][entry][0],
-        type: json[day][entry][2],
-        startTime: json[day][entry][3],
-        endTime: json[day][entry][4],
-        length: json[day][entry][5],
-        room: json[day][entry][7],
+    jsonObj.timetable.push({
+      [day]: [],
+    });
+
+    for (let entry = 1; entry < json[d].length; entry += 1) {
+      if (json[d][entry][2] === '' || json[d][entry][5] === '' || json[d][entry][0] === '') { continue; }
+      jsonObj.timetable[d - 8][day].push({
+        name: json[d][entry][0],
+        type: json[d][entry][2],
+        startTime: json[d][entry][3],
+        endTime: json[d][entry][4],
+        length: json[d][entry][5],
+        room: json[d][entry][7],
       });
     }
-    counter += 1;
   }
 
   if (Object.keys(jsonObj.timetable[4]).length === 0) {
