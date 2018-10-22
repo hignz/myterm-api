@@ -1,12 +1,10 @@
 const got = require('got');
 const cheerio = require('cheerio');
 
-const url = 'https://www.itsligo.ie/student-hub/lecture-rooms/';
+const url = 'https://www.itsligo.ie/student-hub/computer-labs/';
 
 module.exports = async () => {
   const { body } = await got(url);
-
-  console.log(body);
 
   const $ = cheerio.load(body);
 
@@ -27,8 +25,6 @@ module.exports = async () => {
       rooms: [room],
     }];
   });
-
-  console.log(JSON.stringify(json));
 
   return json;
 };
