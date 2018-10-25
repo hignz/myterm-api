@@ -9,6 +9,7 @@ module.exports = async () => {
   const $ = cheerio.load(body);
 
   const json = {};
+  json.data = [];
 
   $('.timeslot').each((i, element) => {
     const item = $(element);
@@ -21,9 +22,14 @@ module.exports = async () => {
       .replace(/\./g, '')
       .replace(/\s\s+/g, ' ');
 
-    json[time] = [{
-      rooms: [room],
-    }];
+    json.data.push({
+      time,
+      freerooms: [room],
+    });
+
+    // json[time] = [{
+    //   rooms: [room],
+    // }];
   });
 
   return json;
