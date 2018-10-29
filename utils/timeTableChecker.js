@@ -1,7 +1,24 @@
 const urlFactory = require('./urlFactory');
 const tabletojson = require('tabletojson');
+const got = require('got');
+const cheerio = require('cheerio');
 
 module.exports = async (courseCode) => {
+  const { body } = await got('http://timetables.itsligo.ie:81/studentset.htm');
+  const $ = cheerio.load(body);
+
+  setTimeout(() => {
+    $('[name=identifier] option').each((i, el) => {
+      const item = $(el).val();
+      console.log(item);
+    });
+  }, 10000);
+
+  // const category = $('option').filter(() => $(this).text().includes('SG'))
+  //   .next().text().length;
+
+  // console.log(category);
+
   const json = await tabletojson.convertUrl(urlFactory(courseCode));
 
   const jsonObj = {};
