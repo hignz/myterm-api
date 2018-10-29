@@ -26,10 +26,6 @@ module.exports = async (type) => {
       time,
       freerooms: [room],
     });
-
-    // json[time] = [{
-    //   rooms: [room],
-    // }];
   });
 
   return json;
