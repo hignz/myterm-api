@@ -8,8 +8,8 @@ router.get('/timetable/:code', async (ctx) => {
   ctx.body = await jsonFactory(ctx.params.code);
 });
 
-router.get('/freerooms', async (ctx) => {
-  ctx.body = await roomChecker();
+router.get('/freerooms/:type', async (ctx) => {
+  ctx.body = await roomChecker(ctx.params.type);
 });
 
 module.exports = router;

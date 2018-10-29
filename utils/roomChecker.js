@@ -1,9 +1,9 @@
 const got = require('got');
 const cheerio = require('cheerio');
 
-const url = 'https://www.itsligo.ie/student-hub/computer-labs/';
+module.exports = async (type) => {
+  const url = type === '0' ? 'https://www.itsligo.ie/student-hub/computer-labs/' : 'https://www.itsligo.ie/student-hub/lecture-rooms/';
 
-module.exports = async () => {
   const { body } = await got(url);
 
   const $ = cheerio.load(body);
