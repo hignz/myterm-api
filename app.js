@@ -1,15 +1,15 @@
 const Koa = require('koa');
 const KoaJson = require('koa-json');
-const router = require('./router/routes');
+const router = require('./src/router/routes');
 const cors = require('@koa/cors');
 const path = require('path');
 const render = require('koa-ejs');
 
 const app = new Koa();
-const port = process.env.PORT || 3000;
+const config = require('./src/config');
 
 render(app, {
-  root: path.join(__dirname, 'views'),
+  root: path.join(`${__dirname}/src/`, 'views'),
   layout: 'layout',
   viewExt: 'html',
   cache: false,
@@ -28,4 +28,4 @@ app
   .use(router.routes())
   .use(router.allowedMethods());
 
-app.listen(port, () => console.log(`Server live on port ${port}`));
+app.listen(config.Port, () => console.log(`Server live on port ${config.Port}`));

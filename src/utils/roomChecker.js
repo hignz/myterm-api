@@ -1,8 +1,10 @@
 const got = require('got');
 const cheerio = require('cheerio');
 
+const config = require('../config');
+
 module.exports = async (type) => {
-  const url = type === '0' ? 'https://www.itsligo.ie/student-hub/computer-labs/' : 'https://www.itsligo.ie/student-hub/lecture-rooms/';
+  const url = type === '0' ? config.LabRoomURL : config.LectureRoomURL;
 
   const { body } = await got(url);
 
