@@ -1,16 +1,17 @@
-<div class="card text-white bg-dark mb-3" style="max-width: 24rem;">
-  <div class="card-header">Timetables</div>
+<div class="card text-dark bg-light mb-3" style="max-width: 24rem;">
+  <div class="card-header font-weight-bold">Timetables</div>
   <div class="card-body">
-    <h5 class="card-title">/timetable/<strong>courseCode</strong></h5>
+    <h5 class="card-title">/timetable/{courseCode}</h5>
     <p class="card-text">Full course code with forward slashes replaced with dashes needed.</p>
     <p class="card-text">e.g. /timetable/Sg_KSDEV_B07-F-Y2-1-(A)</p>
   </div>
 </div>
 
-<div class="card text-white bg-dark mb-3" style="max-width: 24rem;">
-  <div class="card-header">Free rooms</div>
+<div class="card text-dark bg-light mb-3 shadow-sm" style="max-width: 24rem;">
+  <div class="card-header font-weight-bold">Free rooms</div>
   <div class="card-body">
-    <h5 class="card-title">/freerooms</h5>
-    <p class="card-text">Experimental. Lists avaiable free rooms.</p>
+    <h5 class="card-title">/freerooms/{0 or 1}</h5>
+    <p class="card-text">Lists available free rooms for today. 0 for labs or 1 for lecture rooms</p>
+    <p class="card-text">e.g. /freerooms/0</p>
   </div>
 </div>
