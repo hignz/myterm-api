@@ -1,3 +1,3 @@
-# itsligo-timetable-api
+# IT Sligo API
 
-web scraping API for IT Sligo website
+node.js API for IT Sligo to get timetable and room availablity JSON
