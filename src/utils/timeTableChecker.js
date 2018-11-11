@@ -29,9 +29,5 @@ module.exports = async (courseCode) => {
     }
   }
 
-  if (Object.keys(jsonObj.data[4]).length === 0) {
-    jsonObj.data.splice(4, 1);
-  }
-
   return jsonObj;
 };

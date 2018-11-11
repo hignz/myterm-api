@@ -11,11 +11,13 @@
   "dependencies": {
     "@koa/cors": "^2.2.2",
     "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.1.0",
     "got": "^9.2.2",
     "koa": "^2.5.3",
     "koa-ejs": "^4.1.2",
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
+    "mongoose": "^5.3.11",
     "tabletojson": "^0.9.8"
   },
   "engines": {
