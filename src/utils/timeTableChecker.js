@@ -1,12 +1,12 @@
 const urlFactory = require('./urlFactory');
 const tabletojson = require('tabletojson');
-const getDay = require('./intToDay');
 
 module.exports = async (courseCode) => {
   let json = await tabletojson.convertUrl(urlFactory(courseCode));
 
   const jsonObj = {};
   jsonObj.data = [];
+  console.log(json);
 
   json = json.splice(8, 5);
 
@@ -17,7 +17,6 @@ module.exports = async (courseCode) => {
       if (json[d][entry][2] === '' || json[d][entry][5] === '' || json[d][entry][0] === '') continue;
 
       jsonObj.data[d].push({
-        day: getDay(d),
         startTime: json[d][entry][3],
         name: json[d][entry][0],
         room: json[d][entry][7],
@@ -28,6 +27,9 @@ module.exports = async (courseCode) => {
       });
     }
   }
+
+  console.log(JSON.stringify(jsonObj));
+  console.log(urlFactory(courseCode));
 
   return jsonObj;
 };

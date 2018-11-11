@@ -8,6 +8,7 @@ const router = new KoaRouter();
 router.get('/timetable/:code', async (ctx) => {
   try {
     const data = await Timetable.find({ course: ctx.params.code.toUpperCase().replace(/-/g, '/') });
+    console.log(data[0].url);
     ctx.body = await jsonFactory(data[0].url);
   } catch (err) {
     console.log(err);
