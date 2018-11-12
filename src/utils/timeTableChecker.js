@@ -1,14 +1,14 @@
 const urlFactory = require('./urlFactory');
 const tabletojson = require('tabletojson');
 
-module.exports = async (courseCode) => {
-  let json = await tabletojson.convertUrl(urlFactory(courseCode));
+module.exports = async (urlPart) => {
+  let json = await tabletojson.convertUrl(urlFactory(urlPart));
 
   const jsonObj = {};
   jsonObj.data = [];
-  console.log(json);
 
   json = json.splice(8, 5);
+  console.log(json);
 
   for (let d = 0; d < json.length; d += 1) {
     jsonObj.data.push([]);
@@ -29,7 +29,7 @@ module.exports = async (courseCode) => {
   }
 
   console.log(JSON.stringify(jsonObj));
-  console.log(urlFactory(courseCode));
+  console.log(urlFactory(urlPart));
 
   return jsonObj;
 };

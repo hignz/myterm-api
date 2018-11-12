@@ -7,12 +7,6 @@ const TimetableSchema = new mongoose.Schema({
   url: {
     type: String,
   },
-  id: {
-    type: Number,
-  },
 }, { collection: 'data' });
 
-
-const Timetable = mongoose.model('Timetable', TimetableSchema);
-
-module.exports = Timetable;
+module.exports = mongoose.model('Timetable', TimetableSchema);
