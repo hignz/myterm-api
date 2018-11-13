@@ -25,7 +25,7 @@ module.exports = async (urlPart) => {
           day: days[h],
           startTime: details[3],
           name: details[0],
-          room: details[7],
+          room: details[7].trim() || 'N/A',
           type: details[2],
           teacher: details[8],
           length: details[5],
