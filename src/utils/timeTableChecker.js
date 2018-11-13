@@ -1,34 +1,40 @@
 const urlFactory = require('./urlFactory');
-const tabletojson = require('tabletojson');
+const cheerio = require('cheerio');
+const got = require('got');
 
 module.exports = async (urlPart) => {
-  let json = await tabletojson.convertUrl(urlFactory(urlPart));
+  const { body } = await got(urlFactory(urlPart));
+  const $ = cheerio.load(body);
+  const tables = $('table').filter(function () { return $(this).parents('table').length === 0; }).slice(1, -1); // Only top level tables
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const jsonObj = {};
   jsonObj.data = [];
 
-  json = json.splice(8, 5);
-  console.log(json);
-
-  for (let d = 0; d < json.length; d += 1) {
+  $(tables).each((h, e) => { // Day
     jsonObj.data.push([]);
-
-    for (let entry = 1; entry < json[d].length; entry += 1) {
-      if (json[d][entry][2] === '' || json[d][entry][5] === '' || json[d][entry][0] === '') continue;
-
-      jsonObj.data[d].push({
-        startTime: json[d][entry][3],
-        name: json[d][entry][0],
-        room: json[d][entry][7],
-        type: json[d][entry][2],
-        teacher: json[d][entry][8],
-        length: json[d][entry][5],
-        endTime: json[d][entry][4],
+    $(e).children('tbody:not(:nth-child(1))').each((i, elm) => { // Only days with class
+      $(elm).find('tr').each((j, elmem) => { // Class
+        if (j === 0) return; // Skip row with useless data
+        const module = $(elmem);
+        const details = [];
+        $(module).find('td').each((k, elmm) => {
+          details.push($(elmm).text());
+        });
+        jsonObj.data[h].push({
+          day: days[h],
+          startTime: details[3],
+          name: details[0],
+          room: details[7],
+          type: details[2],
+          teacher: details[8],
+          length: details[5],
+          endTime: details[4],
+        });
       });
-    }
-  }
+    });
+  });
 
-  console.log(JSON.stringify(jsonObj));
   console.log(urlFactory(urlPart));
 
   return jsonObj;
