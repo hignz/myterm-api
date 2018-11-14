@@ -35,6 +35,10 @@ module.exports = async (urlPart) => {
     });
   });
 
+  const isEmpty = a => Array.isArray(a) && a.every(isEmpty);
+
+  jsonObj.empty = isEmpty(jsonObj.data);
+
   console.log(urlFactory(urlPart));
 
   return jsonObj;
