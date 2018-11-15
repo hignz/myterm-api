@@ -12,7 +12,7 @@ router.get('/api/timetable/:code', async (ctx) => {
   ctx.body = await jsonFactory(data.url);
 });
 
-router.get('/api/allCodes', async (ctx) => {
+router.get('/api/allcourses', async (ctx) => {
   const all = await Timetable.find({}).select({ course: 1, _id: 0 });
   ctx.body = all;
 });
