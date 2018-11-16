@@ -13,8 +13,8 @@ router.get('/api/timetable/:code', async (ctx) => {
 });
 
 router.get('/api/allcourses', async (ctx) => {
-  const all = await Timetable.find({}).select({ course: 1, _id: 0 });
-  ctx.body = all;
+  const allCourses = await Timetable.find({}).select({ course: 1, _id: 0 });
+  ctx.body = allCourses;
 });
 
 router.get('/api/freerooms/:type', async (ctx) => {
