@@ -10,8 +10,8 @@ module.exports = async (type) => {
 
   const $ = cheerio.load(body);
 
-  const json = {};
-  json.data = [];
+  const jsonObj = {};
+  jsonObj.data = [];
 
   $('.timeslot').each((i, element) => {
     const item = $(element);
@@ -24,11 +24,11 @@ module.exports = async (type) => {
       .replace(/\./g, '')
       .replace(/\s\s+/g, ' ');
 
-    json.data.push({
+    jsonObj.data.push({
       time,
       freerooms: [room],
     });
   });
 
-  return json;
+  return jsonObj;
 };
