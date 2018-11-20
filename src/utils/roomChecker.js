@@ -13,13 +13,9 @@ module.exports = async (type) => {
   const jsonObj = {};
   jsonObj.data = [];
 
-  $('.timeslot').each((i, element) => {
-    const item = $(element);
-    const time = item.children('div .time').text();
-    const room = item.children('.room')
-      .children('.room_id')
-      .not('.hide')
-      .text()
+  $('.room').not('.hide').each((i, elm) => {
+    const time = $(elm).attr('id');
+    const room = $(elm).find('.room_id').not('.hide').text()
       .trim()
       .replace(/\./g, '')
       .replace(/\s\s+/g, ' ');
