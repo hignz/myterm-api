@@ -26,7 +26,7 @@ module.exports = async (urlPart) => {
       jsonObj.data[i].push({
         day: days[i],
         startTime: details[3],
-        name: details[1].split('- ')[1],
+        name: details[1].split('- ')[1] || details[0],
         room: details[7].trim() || 'N/A',
         type: details[2],
         teacher: details[8],
@@ -36,6 +36,7 @@ module.exports = async (urlPart) => {
     });
   });
 
+  console.log(JSON.stringify(jsonObj));
   jsonObj.courseCode = decodeURIComponent(urlPart);
   jsonObj.url = url;
 
