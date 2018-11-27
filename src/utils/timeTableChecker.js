@@ -37,11 +37,8 @@ module.exports = async (urlPart) => {
     });
   });
 
-  console.log(JSON.stringify(jsonObj));
   jsonObj.courseCode = decodeURIComponent(urlPart);
   jsonObj.url = url;
-
-  console.log(urlFactory(urlPart));
 
   return jsonObj;
 };
