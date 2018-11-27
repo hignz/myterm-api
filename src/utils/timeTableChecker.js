@@ -7,13 +7,14 @@ module.exports = async (urlPart) => {
   const { body } = await got(url);
   const $ = cheerio.load(body);
 
-  const tables = $('table') // Only top level tables
-    .filter((i, elm) => (!$(elm).parents('table').length))
-    .slice(1, -1);
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const jsonObj = {};
   jsonObj.data = [];
+
+  const tables = $('table') // Only top level tables
+    .filter((i, elm) => (!$(elm).parents('table').length))
+    .slice(1, -1);
 
   $(tables).each((i, table) => { // Day
     jsonObj.data.push([]);
