@@ -13,7 +13,9 @@ router.get('/api/timetable/:code', async (ctx) => {
 });
 
 router.get('/api/allcourses', async (ctx) => {
-  const allCourses = await Timetable.find({}).select({ course: 1, _id: 0 });
+  const allCourses = await Timetable.find({}).select({
+    course: 1, title: 1, url: 1, _id: 0,
+  });
   ctx.body = allCourses;
 });
 
