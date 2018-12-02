@@ -37,6 +37,9 @@ module.exports = async (urlPart) => {
     });
   });
 
+  const isEmpty = a => Array.isArray(a) && a.every(isEmpty);
+  jsonObj.empty = isEmpty(jsonObj.data);
+
   jsonObj.courseCode = decodeURIComponent(urlPart);
   jsonObj.url = url;
 
