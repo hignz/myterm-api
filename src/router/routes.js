@@ -5,11 +5,11 @@ const Timetable = require('../models/Timetable');
 
 const router = new KoaRouter();
 
-router.get('/api/timetable/:code', async (ctx) => {
+router.get('/api/timetable/:code/:sem?', async (ctx) => {
   console.log(decodeURIComponent(ctx.params.code));
   const data = await Timetable.findOne({ course: ctx.params.code.toUpperCase().replace(/-/g, '/') });
   console.log(data.url);
-  ctx.body = await jsonFactory(data.url);
+  ctx.body = await jsonFactory(data.url, ctx.params.sem);
 });
 
 router.get('/api/allcourses', async (ctx) => {

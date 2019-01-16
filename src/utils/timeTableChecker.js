@@ -2,8 +2,8 @@ const urlFactory = require('./urlFactory');
 const cheerio = require('cheerio');
 const got = require('got');
 
-module.exports = async (urlPart) => {
-  const url = urlFactory(urlPart);
+module.exports = async (urlPart, sem) => {
+  const url = urlFactory(urlPart, sem);
   const { body } = await got(url);
   const $ = cheerio.load(body);
 
@@ -30,7 +30,7 @@ module.exports = async (urlPart) => {
         name: details[1].split('- ')[1] || details[0],
         room: details[7].trim() || 'N/A',
         type: details[2],
-        teacher: details[8],
+        teacher: details[8].replace(/,/g, ', ').replace(/  /g, ' '),
         length: details[5],
         endTime: details[4],
       });
