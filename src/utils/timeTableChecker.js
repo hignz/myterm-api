@@ -1,6 +1,6 @@
-const urlFactory = require('./urlFactory');
 const cheerio = require('cheerio');
 const got = require('got');
+const urlFactory = require('./urlFactory');
 
 module.exports = async (urlPart, sem) => {
   const url = urlFactory(urlPart, sem);
@@ -30,7 +30,7 @@ module.exports = async (urlPart, sem) => {
         name: details[1].split('- ')[1] || details[0],
         room: details[7].trim() || 'N/A',
         type: details[2],
-        teacher: details[8].replace(/,/g, ', ').replace(/  /g, ' '),
+        teacher: details[8].replace(/,/g, ', ').replace(/ {2}/g, ' '),
         length: details[5],
         endTime: details[4],
       });
