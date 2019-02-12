@@ -11,7 +11,7 @@ const getCurrentSemester = () => {
 };
 
 module.exports = (sem) => {
-  const url = (!sem)
+  const url = (!sem || sem === '')
     ? getCurrentSemester()
     : sem === '0'
       ? config.SEM1_URL_PART

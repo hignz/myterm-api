@@ -2,8 +2,10 @@ const cheerio = require('cheerio');
 const got = require('got');
 const urlFactory = require('./urlFactory');
 
-module.exports = async (urlPart, sem) => {
-  const url = urlFactory(urlPart, sem);
+module.exports = async (urlPart, college, sem) => {
+  console.log(urlPart);
+  const url = urlFactory(urlPart, college, sem);
+  console.log(url);
   const { body } = await got(url);
   const $ = cheerio.load(body);
 

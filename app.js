@@ -1,11 +1,11 @@
 require('dotenv/config');
 const Koa = require('koa');
 const KoaJson = require('koa-json');
-const router = require('./src/router/routes');
 const cors = require('@koa/cors');
 const path = require('path');
 const render = require('koa-ejs');
 const mongoose = require('mongoose');
+const router = require('./src/router/routes');
 
 const app = new Koa();
 const config = require('./src/config');
