@@ -11,4 +11,10 @@ module.exports = {
     'http://timetable.ait.ie',
     'http://timetable.lit.ie:8080',
   ],
+  COLLEGE_TIMETABLE_URLS: [
+    'http://timetables.itsligo.ie:81/studentset.htm',
+    'http://timetable.ait.ie/students.htm',
+    'http://timetable.lit.ie:8080/studentset.htm',
+  ],
+  COURSE_UPDATER_INTERVAL: 1 * 1440 * 60 * 1000,
 };

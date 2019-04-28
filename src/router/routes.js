@@ -7,7 +7,7 @@ const router = new KoaRouter();
 
 router.get('/api/timetable/:code/:college?/:sem?', async (ctx) => {
   console.log(decodeURIComponent(ctx.params.code));
-  const data = await Timetable.findOne({ course: ctx.params.code.toUpperCase().replace(/-/g, '/') });
+  const data = await Timetable[ctx.params.college].findOne({ course: ctx.params.code.toUpperCase().replace(/-/g, '/') });
   if (data) {
     ctx.body = await timetableChecker(data.url, ctx.params.college, ctx.params.sem);
   } else {

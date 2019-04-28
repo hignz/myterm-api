@@ -17,7 +17,8 @@
     "koa-ejs": "^4.1.2",
     "koa-json": "^2.0.2",
     "koa-router": "^7.4.0",
-    "mongoose": "^5.3.11"
+    "mongoose": "^5.3.11",
+    "puppeteer": "^1.12.2"
   },
   "engines": {
     "node": "10.12.0"

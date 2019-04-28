@@ -9,6 +9,7 @@ const router = require('./src/router/routes');
 
 const app = new Koa();
 const config = require('./src/config');
+const scraper = require('./src/utils/courseScraper');
 
 render(app, {
   root: path.join(`${__dirname}/src/`, 'views'),
@@ -38,3 +39,7 @@ app.listen(config.PORT, () => {
 const db = mongoose.connection;
 
 db.on('error', (err => console.log(err)));
+
+(async () => {
+  await scraper();
+})();
