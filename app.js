@@ -23,8 +23,19 @@ app.use(bodyParser.json());
 
 app.use('/graphql', graphqlHttp({
   schema: buildSchema(`
+    type Day {
+      day: String!
+      startTime: String!
+      name: String!
+      room: String!
+      type: String!
+      teacher: String!
+      length: String!
+      endTime: String!
+    }
+
     type RootQuery {
-      timetable(name: String): [String!]!
+      timetable[Day!]!
     }
 
     type RootMutation {
