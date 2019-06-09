@@ -1,40 +1,49 @@
-require('dotenv/config');
-const Koa = require('koa');
-const KoaJson = require('koa-json');
-const cors = require('@koa/cors');
-const path = require('path');
-const render = require('koa-ejs');
-const mongoose = require('mongoose');
-const router = require('./src/router/routes');
+const express = require('express');
+const bodyParser = require('body-parser');
+const dotenv = require('dotenv');
+const chalk = require('chalk');
+const graphqlHttp = require('express-graphql');
+const { buildSchema } = require('graphql');
 
-const app = new Koa();
-const config = require('./src/config');
+/**
+ * Environment Variables
+ */
+dotenv.config();
 
-render(app, {
-  root: path.join(`${__dirname}/src/`, 'views'),
-  layout: 'layout',
-  viewExt: 'html',
-  cache: false,
-  debug: false,
-});
+/**
+ * Express App
+ */
+const app = express();
+const { PORT } = process.env;
 
-router.get('/', async (ctx) => {
-  await ctx.render('index');
-});
+/**
+ * Middlewares
+ */
+app.use(bodyParser.json());
 
-app
-  .use(KoaJson())
-  .use(cors());
+app.use('/graphql', graphqlHttp({
+  schema: buildSchema(`
+    type RootQuery {
+      timetable(name: String): [String!]!
+    }
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+    type RootMutation {
+      createTimetable(name: String): String
+    }
 
-app.listen(config.PORT, () => {
-  console.log(`Server live on port ${config.PORT}`);
-  mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true });
-});
+    schema {
+      query: RootQuery
+      mutation: RootMutation
+    }
+  `),
+  rootValue: {
+    timetable: args => ['Cloud', 'C#', 'Web'],
+    createTimetable: (args) => {
+      const timetableName = args.name;
+      return timetableName;
+    },
+  },
+  graphiql: true,
+}));
 
-const db = mongoose.connection;
-
-db.on('error', (err => console.log(err)));
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
