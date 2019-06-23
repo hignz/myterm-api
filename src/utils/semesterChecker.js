@@ -3,7 +3,8 @@ const config = require('../config');
 const getCurrentSemester = () => {
   const today = new Date();
   const year = today.getFullYear();
-  if (Date.parse(today) >= Date.parse(`07/01/${year}`) && Date.parse(today) <= Date.parse(`12/19/${year}`)) {
+  if (Date.parse(today) >= Date.parse(`${year}-07-20`)
+    && Date.parse(today) <= Date.parse(`${year}-12-19`)) {
     return config.SEM1_URL_PART;
   }
 
