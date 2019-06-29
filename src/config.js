@@ -7,8 +7,16 @@ module.exports = {
   SEM1_URL_PART: '?t=student+set+textspreadsheet&days=1-7&weeks=3-9;11-16&periods=1-28&template=student+set+textspreadsheet',
   SEM2_URL_PART: '?t=student+set+textspreadsheet&days=1-7&weeks=22&periods=1-28&template=student+set+textspreadsheet',
   COLLEGE_URLS: [
-    'http://timetables.itsligo.ie:81',
-    'http://timetable.ait.ie',
-    'http://timetable.lit.ie:8080',
+    // 'http://timetables.itsligo.ie:81',
+    {
+      COURSES_URL: 'http://timetable.ait.ie/students.htm',
+      TIMETABLE_URL: 'http://timetable.ait.ie',
+    },
+    {
+      COURSES_URL: 'http://timetable.lit.ie:8080',
+      TIMETABLE_URL: 'http://timetable.lit.ie:8080/',
+    },
   ],
+  RESCRAPE_THRESHOLD: 1000 * 60 * 1,
+  COURSE_UPDATE_INTERVAL: 1000 * 60 * 60 * 24,
 };
