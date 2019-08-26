@@ -3,7 +3,7 @@ const roomScraper = require('../utils/roomScraper');
 
 const router = express.Router();
 
-router.get('/freerooms/:type?', async (req, res, next) => {
+router.get('/rooms/:type?', async (req, res, next) => {
   try {
     const roomType = req.query.type === '1' ? '1' : '0';
     const data = await roomScraper(roomType);

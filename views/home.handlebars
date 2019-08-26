@@ -2,14 +2,12 @@
   <div class="card-header font-weight-bold">Timetables</div>
   <div class="card-body">
     <h5 class="card-title">Endpoint</h5>
-    <h6 class="card-title">/api/timetable/SG_KSDEV_B07-F-Y2-1-(A)/0/0</h6>
+    <h6 class="card-title">/api/timetable?courses=SG_KSDEV_B07/F/Y2/1/(A)?college=0?sem=0</h6>
     <p class="card-text">Returns full week class data in JSON format.</p>
-    <p class="card-text">You need to provide a full course code with its forward slashes replaced with hyphens.</p>
-    <p class="card-text">These course codes can be found on the official timetable pages.</p>
-    <p class="card-text">Alternatively you can use the /allcourses endpoint(detailed below) to retrieve these.</p>
+    <p class="card-text">Course codes can be found on the official timetable pages.</p>
+    <p class="card-text">Alternatively you can use the /courses endpoint(detailed below) to retrieve these codes.</p>
     <h5 class="card-title">Course Code Example:</h5>
-    <span class="card-text">SG_KSDEV_B07/F/Y2/1/(A) 👉 </span>
-    <span class="card-text">SG_KSDEV_B07-F-Y2-1-(A)</span>
+    <span class="card-text">SG_KSDEV_B07/F/Y2/1/(A)</span>
     <h5 class="card-title mt-2">College indexes:</h5>
     <ul class="card-text">
       <li>IT Sligo: 0</li>
@@ -25,21 +23,25 @@
 </div>
 
 <div class="card text-dark bg-light mb-3 shadow-sm" style="max-width: 40rem;">
-  <div class="card-header font-weight-bold">Course Codes</div>
+  <div class="card-header font-weight-bold">Courses</div>
   <div class="card-body">
     <h5 class="card-title">Endpoint</h5>
-    <p class="card-text">/api/allcourses</p>
+    <p class="card-text">/api/courses?college=0</p>
     <p class="card-text">Returns all courses titles, course codes and encoded URL partials in JSON format</p>
   </div>
 </div>
 
 <div class="card text-dark bg-light mb-3 shadow-sm" style="max-width: 40rem;">
-  <div class="card-header font-weight-bold">Free Rooms</div>
+  <div class="card-header font-weight-bold">Rooms</div>
   <div class="card-body">
     <h5 class="card-title">Endpoint</h5>
-    <p class="card-text">/api/freerooms/0</p>
+    <p class="card-text">/api/rooms?type=0</p>
     <p class="card-text">Returns available free labs or rooms for today in JSON format</p>
-    <p class="card-text">Append 0 for labs or 1 for lecture rooms</p>
+    <h5 class="card-title">Type indexes:</h5>
+    <ul class="card-text">
+      <li>Lab rooms: 0</li>
+      <li>Lecture rooms: 1</li>
+    </ul>
   </div>
 </div>
 

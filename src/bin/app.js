@@ -6,21 +6,18 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const chalk = require('chalk');
 const exphbs = require('express-handlebars');
-const shrinkRay = require('shrink-ray-current');
 const updater = require('./updater');
-
-// const compression = require('compression');
-
-/**
- * Express App
- */
-const app = express();
 
 /**
  * Environment Variables
  */
 dotenv.config();
 const { PORT, MONGODB_URI } = process.env;
+
+/**
+ * Express App
+ */
+const app = express();
 
 /**
  * Views
@@ -34,7 +31,6 @@ app.get('/', (req, res) => {
 /**
  * Middleware
  */
-app.use(shrinkRay());
 app.use(helmet());
 app.use(morgan('dev'));
 app.set('x-powered-by', 'IT Timetable Server');
@@ -47,7 +43,7 @@ app.use(
 app.use(cors());
 app.use('/api', require('../routes/timetable'));
 app.use('/api', require('../routes/courses'));
-app.use('/api', require('../routes/freeRooms'));
+app.use('/api', require('../routes/rooms'));
 
 /**
  * Error Handling
@@ -74,7 +70,7 @@ mongoose
   })
   .catch((err) => {
     console.log(err);
-    console.log(chalk.red('Shutting down IT Timetable Server'));
+    console.log(chalk.red('Shutting down MyTerm Server'));
   });
 
 /**

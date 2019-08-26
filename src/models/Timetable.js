@@ -12,26 +12,29 @@ const Day = new mongoose.Schema({
 }, { _id: false });
 
 const TimetableSchema = new mongoose.Schema({
-  course: {
+  title: {
     type: String,
-  },
-  data: [[Day]],
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-  empty: {
-    type: Boolean,
   },
   courseCode: {
     type: String,
   },
-  url: {
-    type: String,
+  date: {
+    type: Date,
+    default: Date.now,
   },
   semester: {
     type: String,
   },
+  college: {
+    type: String,
+  },
+  empty: {
+    type: Boolean,
+  },
+  url: {
+    type: String,
+  },
+  data: [[Day]],
 });
 
 module.exports = mongoose.model('Timetable', TimetableSchema);

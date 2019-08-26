@@ -3,11 +3,11 @@ const express = require('express');
 const timetableScraper = require('../utils/timetableScraper');
 const Timetable = require('../models/Timetable');
 const config = require('../config');
-const getSemester = require('../utils/getSemester');
+const getSemester = require('../utils/getSemesterIndex');
 
 const router = express.Router();
 
-router.get('/timetable/:code?:college?:sem?', async (req, res, next) => {
+router.get('/timetable/:code?:college?:sem?', async (req, res) => {
   const courseCode = decodeURIComponent(req.query.code);
   const collegeIndex = req.query.college || '0';
   const semesterIndex = getSemester(req.query.sem);
@@ -26,7 +26,8 @@ router.get('/timetable/:code?:college?:sem?', async (req, res, next) => {
 
       const result = await newTimetable.save();
 
-      return res.status(200).json(result);
+      return res.status(200)
+        .json(result);
     }
 
     /*
@@ -41,12 +42,15 @@ router.get('/timetable/:code?:college?:sem?', async (req, res, next) => {
         .findOneAndUpdate({ courseCode, semester: semesterIndex },
           newTimetable, { new: true });
 
-      return res.status(200).json(updatedTimetable);
+      return res.status(200)
+        .json(updatedTimetable);
     }
 
-    return res.status(200).json(timetable);
+    return res.status(200)
+      .json(timetable);
   } catch (error) {
-    console.log(error);
+    // TODO: Maybe return out of date if error occurs, such as origin being down
+    console.error(error);
     return res.status(error.statusCode).json({
       error: error.message,
     });

@@ -1,6 +1,8 @@
 const cheerio = require('cheerio');
 const got = require('got');
 const urlFactory = require('./urlFactory');
+const config = require('../config');
+const Course = require('../models/Course');
 
 module.exports = async (urlPart, college, sem) => {
   const url = urlFactory(urlPart, college, sem);
@@ -49,6 +51,10 @@ module.exports = async (urlPart, college, sem) => {
   jsonObj.courseCode = urlPart;
   jsonObj.url = url;
   jsonObj.semester = sem;
+  jsonObj.college = config.COLLEGE_URLS[college].NAME;
+
+  // const c = await Course.findOne({ course: encodeURIComponent(urlPart).replace(/_/g, '%5F') });
+  // jsonObj.title = c || jsonObj.courseCode;
 
   return jsonObj;
 };

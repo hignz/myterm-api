@@ -9,7 +9,7 @@ router.get('/courses?:college', async (req, res, next) => {
 
     return res.status(200).json(courses);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).json({
       messaage: 'An error occured',
     });
