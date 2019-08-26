@@ -2,7 +2,7 @@ const cheerio = require('cheerio');
 const got = require('got');
 const urlFactory = require('./urlFactory');
 const config = require('../config');
-const Course = require('../models/Course');
+// const Course = require('../models/Course');
 
 module.exports = async (urlPart, college, sem) => {
   const url = urlFactory(urlPart, college, sem);
