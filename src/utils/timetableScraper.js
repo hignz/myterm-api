@@ -2,7 +2,7 @@ const cheerio = require('cheerio');
 const got = require('got');
 const urlFactory = require('./urlFactory');
 const config = require('../config');
-// const Course = require('../models/Course');
+const Course = require('../models/Course');
 
 module.exports = async (urlPart, college, sem) => {
   const url = urlFactory(urlPart, college, sem);
@@ -53,8 +53,17 @@ module.exports = async (urlPart, college, sem) => {
   jsonObj.semester = sem;
   jsonObj.college = config.COLLEGE_URLS[college].NAME;
 
-  // const c = await Course.findOne({ course: encodeURIComponent(urlPart).replace(/_/g, '%5F') });
-  // jsonObj.title = c || jsonObj.courseCode;
+  const course = await Course.findOne({ course: encodeURIComponent(urlPart).replace(/_/g, '%5F').replace(/\(/g, '%28').replace(/\)/g, '%29') });
+  if (course) {
+    if (course.college === '1') {
+      const match = course.title.match(/\d-/);
+      jsonObj.title = course.title.match(/\d-/) ? course.title.substring(course.title.indexOf(match) + 2) : course.title.substring(course.title.indexOf(' '), course.title.length);
+    } else {
+      jsonObj.title = course.title;
+    }
+  } else {
+    jsonObj.title = jsonObj.courseCode;
+  }
 
   return jsonObj;
 };
