@@ -12,9 +12,6 @@ const Day = new mongoose.Schema({
 }, { _id: false });
 
 const TimetableSchema = new mongoose.Schema({
-  _id: {
-    type: mongoose.Types.ObjectId,
-  },
   title: {
     type: String,
   },
