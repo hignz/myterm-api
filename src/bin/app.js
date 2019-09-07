@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const chalk = require('chalk');
 const exphbs = require('express-handlebars');
+const compression = require('compression');
 const updater = require('./updater');
 
 /**
@@ -19,9 +20,11 @@ const { PORT, MONGODB_URI } = process.env;
  */
 const app = express();
 
+app.use(compression());
+
 /**
- * Views
- */
+*Views
+*/
 app.engine('handlebars', exphbs());
 app.set('view engine', 'handlebars');
 app.get('/', (req, res) => {
