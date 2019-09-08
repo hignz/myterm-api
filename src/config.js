@@ -5,7 +5,7 @@ module.exports = {
   MONGODB_URI: process.env.MONGODB_URI,
   LIST_URL: '/reporting/textspreadsheet;student+set;id;',
   SEM1_URL_PART: '?t=student+set+textspreadsheet&days=1-7&weeks=3&periods=3-28&template=student+set+textspreadsheet',
-  SEM2_URL_PART: '?t=student+set+textspreadsheet&days=1-7&weeks=22&periods=1-28&template=student+set+textspreadsheet',
+  SEM2_URL_PART: '?t=student+set+textspreadsheet&days=1-7&weeks=22-32;35-36&periods=1-28&template=student+set+textspreadsheet',
   COLLEGE_URLS: [
     {
       NAME: 'IT Sligo',
