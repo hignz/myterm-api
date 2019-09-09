@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const config = require('../config');
 
 module.exports = async (college) => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const page = await browser.newPage();
 
   await page.goto(config.COLLEGE_URLS[college].COURSES_URL);
