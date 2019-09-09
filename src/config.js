@@ -17,11 +17,11 @@ module.exports = {
       COURSES_URL: 'http://timetable.ait.ie/students.htm',
       TIMETABLE_URL: 'http://timetable.ait.ie',
     },
-    // {
-    //   NAME: 'Limerick Institute of Technology',
-    //   COURSES_URL: 'http://timetable.lit.ie:8080/studentset2.htm',
-    //   TIMETABLE_URL: 'http://timetable.lit.ie:8080',
-    // },
+    {
+      NAME: 'Limerick Institute of Technology',
+      COURSES_URL: 'http://timetable.lit.ie:8080/studentset2.htm',
+      TIMETABLE_URL: 'http://timetable.lit.ie:8080',
+    },
   ],
   RESCRAPE_THRESHOLD: 1000 * 60 * 10,
   COURSE_UPDATE_INTERVAL: 1000 * 60 * 60 * 24,

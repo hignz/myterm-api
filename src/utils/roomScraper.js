@@ -24,8 +24,6 @@ module.exports = async (type) => {
         .replace(/\./g, '')
         .replace(/\s\s+/g, ' ');
 
-      console.log(room);
-
       rooms.data.push({
         time,
         freerooms: [room],
