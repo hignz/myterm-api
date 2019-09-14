@@ -35,7 +35,7 @@ module.exports = async (urlPart, college, sem) => {
         jsonObj.data[i].push({
           day: days[i],
           startTime: details[3],
-          name: details[1].split('- ')[1] || details[1],
+          name: details[1].split('- ')[1] || details[1] || details[0],
           room: details[7].trim() || 'N/A',
           type: details[2],
           teacher: details[8].replace(/,/g, ', ').replace(/ {2}/g, ' '),
