@@ -18,9 +18,9 @@ module.exports = async (urlPart, college, sem) => {
   const tables = $('table')
     .filter((i, elm) => (!$(elm).parents('table').length))
     .slice(1, -1);
-
-  // Each day
+    // Each day
   $(tables).each((i, table) => {
+    let lastEndTime;
     jsonObj.data.push([]);
     // Only days with class
     $(table)
@@ -32,6 +32,16 @@ module.exports = async (urlPart, college, sem) => {
         $(row).find('td').each((k, cell) => {
           details.push($(cell).text());
         });
+
+        if (details[3] > lastEndTime && lastEndTime !== null) {
+          const difference = Math.abs(
+            new Date(`01/01/1990 ${details[3]}`).getTime()
+              - new Date(`01/01/1990 ${lastEndTime}`).getTime(),
+          ) / 60000;
+          if (difference > 0) {
+            jsonObj.data[i].push({ break: true, breakLength: difference });
+          }
+        }
         jsonObj.data[i].push({
           day: days[i],
           startTime: details[3],
@@ -42,6 +52,9 @@ module.exports = async (urlPart, college, sem) => {
           length: details[5],
           endTime: details[4],
         });
+
+
+        lastEndTime = details[4];
       });
   });
 

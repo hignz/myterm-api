@@ -9,6 +9,8 @@ const Day = new mongoose.Schema({
   teacher: String,
   length: String,
   endTime: String,
+  break: Boolean,
+  breakLength: String,
 }, { _id: false });
 
 const TimetableSchema = new mongoose.Schema({

@@ -8,7 +8,6 @@ async function getCourseCodes () {
       config.COLLEGE_URLS.map((url, index) => courseScraper(index)),
     )).reduce((courses, results) => courses.concat(results), []);
 
-    console.log(collegeCourses.length);
     await Course.deleteMany({});
     await Course.insertMany(collegeCourses);
   } catch (error) {

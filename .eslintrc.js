@@ -12,5 +12,5 @@ module.exports = {
     "no-continue": "off",
     "no-param-reassign": "off",
     "import/prefer-default-export": "off",
-  }
+  },
 };
