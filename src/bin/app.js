@@ -67,7 +67,9 @@ app.use((error, req, res) => {
  * MongoDB Connection
  */
 mongoose
-  .connect(MONGODB_URI, { useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true })
+  .connect(MONGODB_URI, {
+    useNewUrlParser: true, useFindAndModify: false, useCreateIndex: true, useUnifiedTopology: true,
+  })
   .then(() => {
     app.listen(PORT, console.log(chalk.yellow(`✔︎ Server started on port ${PORT}`)));
   })

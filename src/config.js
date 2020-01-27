@@ -14,7 +14,7 @@ module.exports = {
     },
     {
       NAME: 'Athlone Institute of Technology',
-      COURSES_URL: 'http://timetable.ait.ie/students.htm',
+      COURSES_URL: 'https://timetable.ait.ie/default.aspx',
       TIMETABLE_URL: 'http://timetable.ait.ie',
     },
     {
@@ -23,6 +23,6 @@ module.exports = {
       TIMETABLE_URL: 'http://timetable.lit.ie:8080',
     },
   ],
-  RESCRAPE_THRESHOLD: 1000 * 60 * 10,
+  RESCRAPE_THRESHOLD: 1000 * 60 * 15,
   COURSE_UPDATE_INTERVAL: 1000 * 60 * 60 * 24,
 };
