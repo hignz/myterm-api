@@ -12,11 +12,11 @@ module.exports = {
       COURSES_URL: 'http://timetables.itsligo.ie:81/studentset.htm',
       TIMETABLE_URL: 'http://timetables.itsligo.ie:81',
     },
-    {
-      NAME: 'Athlone Institute of Technology',
-      COURSES_URL: 'https://timetable.ait.ie/default.aspx',
-      TIMETABLE_URL: 'http://timetable.ait.ie',
-    },
+    // {
+    //   NAME: 'Athlone Institute of Technology',
+    //   COURSES_URL: 'https://timetable.ait.ie/default.aspx',
+    //   TIMETABLE_URL: 'http://timetable.ait.ie',
+    // },
     {
       NAME: 'Limerick Institute of Technology',
       COURSES_URL: 'http://timetable.lit.ie:8080/studentset2.htm',
