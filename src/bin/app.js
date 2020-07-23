@@ -8,6 +8,7 @@ const chalk = require('chalk');
 const exphbs = require('express-handlebars');
 const compression = require('compression');
 const updater = require('./updater');
+const routes = require('../routes/v1');
 
 /**
  * Environment Variables
@@ -19,8 +20,6 @@ const { PORT, MONGODB_URI } = process.env;
  * Express App
  */
 const app = express();
-
-app.use(compression());
 
 /**
 *Views
@@ -36,7 +35,6 @@ app.get('/', (req, res) => {
  */
 app.use(helmet());
 app.use(morgan('dev'));
-app.set('x-powered-by', 'IT Timetable Server');
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -44,9 +42,10 @@ app.use(
   }),
 );
 app.use(cors());
-app.use('/api', require('../routes/timetable'));
-app.use('/api', require('../routes/courses'));
-app.use('/api', require('../routes/rooms'));
+app.use(compression());
+
+// v1 routes
+app.use('/v1', routes);
 
 /**
  * Error Handling
