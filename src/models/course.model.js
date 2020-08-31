@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const courseSchema = mongoose.Schema({
+const courseSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Types.ObjectId,
     select: false,
@@ -15,6 +15,8 @@ const courseSchema = mongoose.Schema({
     type: String,
   },
 });
+
+courseSchema.index({ college: 1 });
 
 const courses = mongoose.model('Course', courseSchema);
 

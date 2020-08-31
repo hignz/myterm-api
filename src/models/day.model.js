@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const daySchema = mongoose.Schema(
+const daySchema = new mongoose.Schema(
   {
     day: {
       type: String,
@@ -30,7 +30,7 @@ const daySchema = mongoose.Schema(
       type: Boolean,
     },
     breakLength: {
-      type: String,
+      type: Number,
     },
   },
   { _id: false }

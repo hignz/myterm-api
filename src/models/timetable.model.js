@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const day = require('./day.model').schema;
 
-const timetableSchema = mongoose.Schema(
+const timetableSchema = new mongoose.Schema(
   {
     title: {
       type: String,
