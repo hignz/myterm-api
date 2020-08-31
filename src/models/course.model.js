@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CourseSchema = new mongoose.Schema({
+const courseSchema = new mongoose.Schema({
   _id: {
     type: mongoose.Types.ObjectId,
     select: false,
@@ -16,6 +16,8 @@ const CourseSchema = new mongoose.Schema({
   },
 });
 
-const courses = mongoose.model('Courses', CourseSchema);
+courseSchema.index({ college: 1 });
+
+const courses = mongoose.model('Course', courseSchema);
 
 module.exports = courses;
