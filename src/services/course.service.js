@@ -5,7 +5,7 @@ const { Course } = require('../models');
  * @param {ObjectId} id
  * @returns {Promise<Course>}
  */
-const getCoursesByCollegeId = async (id) => Course.find({ college: id });
+const getCoursesByCollegeId = async (id) => Course.find({ college: id }).lean();
 
 module.exports = {
   getCoursesByCollegeId,
