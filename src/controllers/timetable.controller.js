@@ -1,17 +1,16 @@
-const httpStatus = require('http-status');
+const { diff } = require('deep-object-diff');
 const catchAsync = require('../utils/catchAsync');
-const { timetableService, scraperService } = require('../services');
 const config = require('../config/config');
+const { timetableService, scraperService } = require('../services');
+const logger = require('../config/logger');
 
 const getTimetable = catchAsync(async (req, res) => {
   const courseCode = decodeURIComponent(req.query.code);
-  const collegeIndex = req.query.college || '0';
-  const semesterIndex = await scraperService.getSemester(req.query.sem);
-  const timetable = await timetableService.getTimetableById(courseCode, semesterIndex);
+  const collegeIndex = req.query.college;
+  const semesterIndex = req.query.sem;
+  const timetable = await timetableService.getTimetableByCodeAndSemester(courseCode, semesterIndex);
 
-  /*
-    If its not in the db, scrape it
-  */
+  // If timetable is not in the db, scrape and return it
   if (!timetable) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
       courseCode,
@@ -19,12 +18,12 @@ const getTimetable = catchAsync(async (req, res) => {
       semesterIndex
     );
 
-    return res.send(scrapedTimetable);
+    const newTimetable = await timetableService.createTimetable(scrapedTimetable);
+
+    return res.send(newTimetable);
   }
 
-  /*
-    If stored timetable is out of date, rescrape
-  */
+  // If timetable in db is "old", rescrape and check for differences
   const outOfDate = timetable.updatedAt < Date.now() - config.RESCRAPE_THRESHOLD;
   if (outOfDate) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
@@ -32,14 +31,18 @@ const getTimetable = catchAsync(async (req, res) => {
       collegeIndex,
       semesterIndex
     );
+    // timetable.data.push({});
+    // if there is a difference in stored and freshly scraped timetables, update the db
+    const difference = diff(scrapedTimetable.data, timetable.data);
+    if (Object.keys(difference).length) {
+      logger.info(`[difference found]: ${difference}`);
 
-    const updatedTimetable = await timetableService.updateTimetable(
-      courseCode,
-      semesterIndex,
-      scrapedTimetable
-    );
-
-    return res.send(updatedTimetable);
+      const updatedTimetable = await timetableService.updateTimetable(
+        timetable._id,
+        scrapedTimetable
+      );
+      return res.send(updatedTimetable);
+    }
   }
 
   return res.send(timetable);
