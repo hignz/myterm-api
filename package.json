@@ -4,7 +4,7 @@
   "description": "REST API to retrieve timetables from various Irish Institutions",
   "main": "src/bin/app.js",
   "scripts": {
-    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "start": "node src/bin/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/bin/index.js"
   },
   "author": "hignz",
@@ -24,10 +24,8 @@
     "helmet": "^3.22.0",
     "http-status": "^1.4.2",
     "joi": "^17.1.1",
-    "moment": "^2.26.0",
     "mongoose": "^5.9.16",
     "morgan": "^1.10.0",
-    "pm2": "^4.1.2",
     "puppeteer": "^1.20.0",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4",
