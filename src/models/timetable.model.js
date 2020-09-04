@@ -5,9 +5,11 @@ const timetableSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      trim: true,
     },
     courseCode: {
       type: String,
+      trim: true,
     },
     semester: {
       type: String,
