@@ -37,7 +37,7 @@ const getTimetableById = async (id) => Timetable.findById(id);
 const updateTimetable = async (id, data) => {
   const timetable = await getTimetableById(id);
   if (!timetable) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Could not find timetable to update');
+    throw new ApiError(httpStatus.NO_CONTENT, 'Could not find timetable to update');
   }
 
   Object.assign(timetable, data);

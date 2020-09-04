@@ -9,7 +9,6 @@ const getTimetable = catchAsync(async (req, res) => {
   const collegeIndex = req.query.college;
   const semesterIndex = req.query.sem;
   const timetable = await timetableService.getTimetableByCodeAndSemester(courseCode, semesterIndex);
-
   // If timetable is not in the db, scrape and return it
   if (!timetable) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
@@ -17,6 +16,12 @@ const getTimetable = catchAsync(async (req, res) => {
       collegeIndex,
       semesterIndex
     );
+
+    if (!scrapedTimetable) {
+      return res.send({
+        timedout: true,
+      });
+    }
 
     const newTimetable = await timetableService.createTimetable(scrapedTimetable);
 
@@ -31,11 +36,18 @@ const getTimetable = catchAsync(async (req, res) => {
       collegeIndex,
       semesterIndex
     );
-    // timetable.data.push({});
+
+    if (!scrapedTimetable) {
+      Object.assign(timetable, {
+        timedout: true,
+      });
+      return res.send(timetable);
+    }
+
     // if there is a difference in stored and freshly scraped timetables, update the db
     const difference = diff(scrapedTimetable.data, timetable.data);
     if (Object.keys(difference).length) {
-      logger.info(`[difference found]: ${difference}`);
+      logger.info(`[difference found]`);
 
       const updatedTimetable = await timetableService.updateTimetable(
         timetable._id,

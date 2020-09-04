@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
-const got = require('got');
 const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
+const AbortController = require('abort-controller');
 const { Course } = require('../models');
 const config = require('../config/config');
 
@@ -11,15 +12,15 @@ const getCurrentSemester = () => {
     Date.parse(today) >= Date.parse(`${year}-07-20`) &&
     Date.parse(today) <= Date.parse(`${year}-12-19`)
   ) {
-    return config.URL_PARTS[0];
+    return 0;
   }
 
-  return config.URL_PARTS[1];
+  return 1;
 };
 
 const generateSemesterUrl = (sem) => {
   if (!sem || (sem !== '0' && sem !== '1')) {
-    return getCurrentSemester();
+    return config.URL_PARTS[getCurrentSemester()];
   }
   return config.URL_PARTS[parseInt(sem, 10)];
 };
@@ -31,6 +32,30 @@ const generateUrl = (urlPart, sem) =>
   )}${generateSemesterUrl(sem)}`;
 
 /**
+ * Fetches body of timetable, handle timeouts in case of target site being down
+ * @param {String} url
+ * @returns {Object}
+ */
+const fetchBody = async (url) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+    return null;
+  }, 3500);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return await response.text();
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      return null;
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+};
+
+/**
  * Scrapes timetable
  * @param {String} urlPart
  * @param {String} college
@@ -39,7 +64,11 @@ const generateUrl = (urlPart, sem) =>
  */
 const scrapeTimetable = async (urlPart, college, sem) => {
   const url = generateUrl(urlPart, sem);
-  const { body } = await got(url);
+  const body = await fetchBody(url);
+  if (!body) {
+    return null;
+  }
+
   const $ = cheerio.load(body);
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -95,11 +124,10 @@ const scrapeTimetable = async (urlPart, college, sem) => {
         lastEndTime = details[4];
       });
   });
-
   json.empty = [].concat(...json.data).length <= 0;
   json.courseCode = urlPart;
   json.url = url;
-  json.semester = sem;
+  json.semester = sem || getCurrentSemester();
   json.college = config.COLLEGE_URLS[0].NAME;
 
   const course = await Course.findOne({
