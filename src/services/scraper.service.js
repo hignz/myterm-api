@@ -5,6 +5,21 @@ const AbortController = require('abort-controller');
 const { Course } = require('../models');
 const config = require('../config/config');
 
+/**
+ * Gets courses by college id
+ * @param {String} str
+ * @returns {Promise<Course>}
+ */
+const toTitleCase = (str) => {
+  return str
+    .toLowerCase()
+    .split(' ')
+    .map((word) => {
+      return word.charAt(0).toUpperCase() + word.substr(1);
+    })
+    .join(' ');
+};
+
 const getCurrentSemester = () => {
   const today = new Date();
   const year = today.getFullYear();
@@ -85,6 +100,7 @@ const scrapeTimetable = async (urlPart, college, sem) => {
   // Each day
   $(tables).each((i, table) => {
     let lastEndTime;
+    let lastStartTime;
     json.data.push([]);
     // Only days with class
     $(table)
@@ -99,8 +115,7 @@ const scrapeTimetable = async (urlPart, college, sem) => {
           .each((k, cell) => {
             details.push($(cell).text());
           });
-
-        if (details[3] > lastEndTime && lastEndTime !== null) {
+        if (lastEndTime !== null && lastEndTime !== details[4] && lastStartTime !== details[3]) {
           const difference =
             Math.abs(
               new Date(`01/01/1990 ${details[3]}`).getTime() -
@@ -111,9 +126,10 @@ const scrapeTimetable = async (urlPart, college, sem) => {
           }
         }
         json.data[i].push({
+          activity: details[0],
           day: days[i],
           startTime: details[3],
-          name: details[1].split('- ')[1] || details[1] || details[0],
+          name: toTitleCase(details[1].split('- ')[1] || details[1] || details[0]),
           room: details[7].trim() || 'N/A',
           type: details[2],
           teacher: details[8].replace(/,/g, ', ').replace(/ {2}/g, ' '),
@@ -122,6 +138,7 @@ const scrapeTimetable = async (urlPart, college, sem) => {
         });
 
         lastEndTime = details[4];
+        lastStartTime = details[3];
       });
   });
   json.empty = [].concat(...json.data).length <= 0;
