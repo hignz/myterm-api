@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const daySchema = new mongoose.Schema(
   {
+    activity: {
+      type: String,
+      trim: true,
+    },
     day: {
       type: String,
     },
@@ -10,15 +14,18 @@ const daySchema = new mongoose.Schema(
     },
     name: {
       type: String,
+      trim: true,
     },
     room: {
       type: String,
+      trim: true,
     },
     type: {
       type: String,
     },
     teacher: {
       type: String,
+      trim: true,
     },
     length: {
       type: String,
