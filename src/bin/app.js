@@ -1,6 +1,5 @@
 const compression = require('compression');
 const cors = require('cors');
-const exphbs = require('express-handlebars');
 const express = require('express');
 const helmet = require('helmet');
 const httpStatus = require('http-status');
@@ -13,12 +12,6 @@ const ApiError = require('../utils/ApiError');
 const { updateCourseCodes } = require('./updater');
 
 const app = express();
-
-app.engine('handlebars', exphbs());
-app.set('view engine', 'handlebars');
-app.get('/', (req, res) => {
-  res.render('home');
-});
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -40,7 +33,6 @@ app.use((req, res, next) => {
 });
 
 app.use(errorConverter);
-
 app.use(errorHandler);
 
 /**
@@ -50,5 +42,7 @@ app.use(errorHandler);
  */
 const job = new CronJob('0 6 * * *', updateCourseCodes, null, true, 'Europe/Dublin');
 job.start();
+
+// updateCourseCodes();
 
 module.exports = app;
