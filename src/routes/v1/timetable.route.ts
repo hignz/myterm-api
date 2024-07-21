@@ -1,8 +1,7 @@
-/* eslint-disable consistent-return */
-const express = require('express');
-const timetableController = require('../../controllers/timetable.controller');
-const timetableValidation = require('../../validations/timetable.validation');
-const validate = require('../../middleware/validate');
+import express from 'express';
+import * as timetableController from '../../controllers/timetable.controller.js';
+import * as timetableValidation from '../../validations/timetable.validation.js';
+import validate from '../../middleware/validate.js';
 
 const router = express.Router();
 
@@ -12,7 +11,7 @@ router.get(
   timetableController.getTimetable
 );
 
-module.exports = router;
+export default router;
 
 /**
  * @swagger

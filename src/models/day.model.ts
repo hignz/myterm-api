@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const daySchema = new mongoose.Schema(
   {
@@ -45,4 +45,4 @@ const daySchema = new mongoose.Schema(
 
 const days = mongoose.model('Day', daySchema);
 
-module.exports = days;
+export default days;

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const day = require('./day.model').schema;
+import mongoose from 'mongoose';
+import day from './day.model.js';
 
 const timetableSchema = new mongoose.Schema(
   {
@@ -23,11 +23,11 @@ const timetableSchema = new mongoose.Schema(
     url: {
       type: String,
     },
-    data: [[day]],
+    data: [[day.schema]],
   },
   { timestamps: true }
 );
 
 const timetables = mongoose.model('Timetable', timetableSchema);
 
-module.exports = timetables;
+export default timetables;
