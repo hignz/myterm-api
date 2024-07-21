@@ -24,14 +24,14 @@
     "express": "^4.19.2",
     "express-mongo-sanitize": "^2.2.0",
     "helmet": "^7.1.0",
-    "http-status": "^1.7.0",
-    "joi": "^17.10.2",
+    "http-status": "^1.7.4",
+    "joi": "^17.13.3",
     "mongoose": "^8.5.1",
     "morgan": "^1.10.0",
     "puppeteer": "^22.13.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^4.6.3",
-    "winston": "^3.10.0"
+    "winston": "^3.13.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.7.0",
@@ -42,7 +42,7 @@
     "@types/node": "^20.14.11",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
-    "eslint": "9.x",
+    "eslint": "~9.7.0",
     "globals": "^15.8.0",
     "knip": "^5.26.0",
     "prettier": "^3.3.3",
@@ -52,6 +52,6 @@
   },
   "engines": {
     "node": "20.10.0",
-    "pnpm": "8.12.0"
+    "pnpm": "9.5.0"
   }
 }
