@@ -23,4 +23,4 @@ const updateTimetable = async (id: string, data: unknown) => {
 
 const createTimetable = async (data: unknown) => Timetable.create(data);
 
-export { createTimetable, getTimetableById, getTimetableByCodeAndSemester, updateTimetable };
+export { createTimetable, getTimetableByCodeAndSemester, updateTimetable };
