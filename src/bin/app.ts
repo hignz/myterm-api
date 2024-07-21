@@ -29,7 +29,7 @@ app.use(mongoSanitize());
 app.use(compression());
 app.use(cors());
 
-app.use('/v1/course', courseRoute);
+app.use('/v1/courses', courseRoute);
 app.use('/v1/docs', docsRoute);
 app.use('/v1/timetables', timetableRoute);
 

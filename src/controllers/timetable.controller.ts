@@ -1,11 +1,11 @@
+import type { Request, Response } from 'express';
 import { diff } from 'deep-object-diff';
+
 import catchAsync from '../utils/catchAsync.js';
 import config from '../config/config.js';
 import * as timetableService from '../services/timetable.service.js';
 import * as scraperService from '../services/scraper.service.js';
 import logger from '../config/logger.js';
-
-import type { Request, Response } from 'express';
 
 const getTimetable = catchAsync(async (req: Request, res: Response) => {
   const courseCode = decodeURIComponent(req.query.code as string);
@@ -32,7 +32,8 @@ const getTimetable = catchAsync(async (req: Request, res: Response) => {
   }
 
   // If timetable in db is "old", rescrape and check for differences
-  const outOfDate = timetable.updatedAt < Date.now() - config.RESCRAPE_THRESHOLD;
+  const outOfDate = timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
+
   if (outOfDate) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
       courseCode,

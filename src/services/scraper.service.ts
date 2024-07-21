@@ -60,7 +60,7 @@ const generateSemesterUrl = (sem: string) => {
 const generateUrl = (urlPart: string, sem: string) =>
   `${config.COLLEGE_URLS[0]?.TIMETABLE_URL}${config.LIST_URL}${encodeURIComponent(urlPart).replace(
     /_/g,
-    '%5F'
+    '%5F',
   )}${generateSemesterUrl(sem)}`;
 
 const fetchBody = async (url: string) => {
@@ -108,7 +108,7 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
     semester: parseInt(sem, 10) || getCurrentSemester(),
     empty: false,
     college: config.COLLEGE_URLS[0]?.NAME ?? '',
-    title: course ? course.title : urlPart,
+    title: course?.title ?? urlPart,
     data: [],
   };
 
@@ -139,7 +139,7 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
           const difference =
             Math.abs(
               new Date(`01/01/1990 ${details[3]}`).getTime() -
-                new Date(`01/01/1990 ${lastEndTime}`).getTime()
+                new Date(`01/01/1990 ${lastEndTime}`).getTime(),
             ) / 60000;
           if (difference > 0) {
             timetable.data?.[i]?.push({ break: true, breakLength: difference });
@@ -165,15 +165,12 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
 
   timetable.empty = (timetable.data?.length ?? 0) <= 0;
 
-  console.log(timetable);
-
   return timetable;
 };
 
 const scrapeCourses = async (college: number) => {
-  console.log('Scraping courses');
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
@@ -194,7 +191,7 @@ const scrapeCourses = async (college: number) => {
       const select = document.querySelector('select[name=identifier]') as HTMLSelectElement;
       return select && select.options.length > 0;
     },
-    { timeout: 10000 }
+    { timeout: 10000 },
   ); // 10 second timeout, adjust as needed
 
   const result = await page.evaluate((c) => {
@@ -206,7 +203,7 @@ const scrapeCourses = async (college: number) => {
       const course = option.value;
       const title = option.innerText;
 
-      console.log(`Option - value: ${course}, text: ${title}`);
+      // console.log(`Option - value: ${course}, text: ${title}`);
 
       data.push({ course, title, college: c });
     }

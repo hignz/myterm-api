@@ -14,7 +14,6 @@ async function updateCourseCodes() {
       return;
     }
 
-    console.log(collegeCourses);
     await Course.deleteMany({});
     await Course.insertMany(collegeCourses);
     logger.info('Updated course codes');
