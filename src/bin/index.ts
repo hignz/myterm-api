@@ -1,11 +1,12 @@
-const mongoose = require('mongoose');
-const app = require('./app');
-const config = require('../config/config');
-const logger = require('../config/logger');
+import mongoose from 'mongoose';
+import app from './app.js';
+import config from '../config/config.js';
+import logger from '../config/logger.js';
 
+// @ts-expect-error FIX ME
 let server;
 mongoose
-  .connect(config.MONGODB_URI, {
+  .connect(config.MONGODB_URI as string, {
     useCreateIndex: true,
     useFindAndModify: false,
     useNewUrlParser: true,
@@ -19,6 +20,7 @@ mongoose
   });
 
 const exitHandler = () => {
+  // @ts-expect-error test
   if (server) {
     server.close(() => {
       logger.info('Server closed');
@@ -28,7 +30,7 @@ const exitHandler = () => {
     process.exit(1);
   }
 };
-
+// @ts-expect-error test
 const unexpectedErrorHandler = (error) => {
   logger.error(error);
   exitHandler();
@@ -39,6 +41,7 @@ process.on('unhandledRejection', unexpectedErrorHandler);
 
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received');
+  // @ts-expect-error test
   if (server) {
     server.close(() => {
       mongoose.connection.close(false, () => {

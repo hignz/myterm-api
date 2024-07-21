@@ -1,4 +1,4 @@
-const Joi = require('joi');
+import Joi from 'joi';
 
 const getTimetable = Joi.object({
   code: Joi.string().max(75).required(),
@@ -6,6 +6,4 @@ const getTimetable = Joi.object({
   sem: Joi.number().min(0).max(1),
 });
 
-module.exports = {
-  getTimetable,
-};
+export { getTimetable };

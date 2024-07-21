@@ -1,7 +1,7 @@
-const express = require('express');
-const courseController = require('../../controllers/course.controller');
-const courseValidation = require('../../validations/course.validation');
-const validate = require('../../middleware/validate');
+import express from 'express';
+import * as courseController from '../../controllers/course.controller.js';
+import * as courseValidation from '../../validations/course.validation.js';
+import validate from '../../middleware/validate.js';
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get(
   courseController.getCoursesByCollege
 );
 
-module.exports = router;
+export default router;
 
 /**
  * @swagger

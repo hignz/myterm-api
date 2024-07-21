@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const courseSchema = new mongoose.Schema({
   _id: {
@@ -20,4 +20,4 @@ courseSchema.index({ college: 1 });
 
 const courses = mongoose.model('Course', courseSchema);
 
-module.exports = courses;
+export default courses;

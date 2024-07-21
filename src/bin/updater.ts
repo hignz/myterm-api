@@ -1,7 +1,7 @@
-const { scrapeCourses } = require('../services/scraper.service');
-const config = require('../config/config');
-const { Course } = require('../models');
-const logger = require('../config/logger');
+import { scrapeCourses } from '../services/scraper.service.js';
+import config from '../config/config.js';
+import Course from '../models/course.model.js';
+import logger from '../config/logger.js';
 
 async function updateCourseCodes() {
   try {
@@ -13,6 +13,8 @@ async function updateCourseCodes() {
       logger.error('No courses found');
       return;
     }
+
+    console.log(collegeCourses);
     await Course.deleteMany({});
     await Course.insertMany(collegeCourses);
     logger.info('Updated course codes');
@@ -21,6 +23,4 @@ async function updateCourseCodes() {
   }
 }
 
-module.exports = {
-  updateCourseCodes,
-};
+export { updateCourseCodes };

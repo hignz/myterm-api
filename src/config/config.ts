@@ -1,9 +1,13 @@
-const dotenv = require('dotenv');
-const path = require('path');
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-module.exports = {
+export default {
   ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   LABROOM_URL: process.env.LAB_URL || 'https://www.itsligo.ie/student-hub/computer-labs/',
@@ -22,7 +26,7 @@ module.exports = {
     },
     // {
     //   NAME: 'Athlone Institute of Technology',
-    //   COURSES_URL: 'https://timetable.ait.ie/default.aspx',
+    //   COURSES_URL: 'https://timetable.ait.ie/2021/default.aspx',
     //   TIMETABLE_URL: 'http://timetable.ait.ie',
     // },
     // {
@@ -31,6 +35,7 @@ module.exports = {
     //   TIMETABLE_URL: 'http://timetable.lit.ie:8080',
     // },
   ],
-  RESCRAPE_THRESHOLD: 1000 * 60 * 60 * 1,
+  RESCRAPE_THRESHOLD: 1000 * 1,
+  // RESCRAPE_THRESHOLD: 1000 * 60 * 60 * 1,
   COURSE_UPDATE_INTERVAL: 1000 * 60 * 60 * 24,
 };
