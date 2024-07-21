@@ -1,11 +1,11 @@
 import config from '../config/config.js';
-import { version } from '../../package.json';
+import packageJson from '../../package.json' assert { type: 'json' };
 
 const swaggerDef = {
   openapi: '3.0.0',
   info: {
     title: 'MyTerm API',
-    version,
+    version: packageJson.version,
     license: {
       name: 'MIT',
       url: 'https://github.com/hignz/myterm-api',

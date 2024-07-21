@@ -5,7 +5,7 @@
   "main": "src/bin/app.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/bin/index.js",
+    "start": "node dist/src/bin/index.js",
     "dev": "cross-env NODE_ENV=development tsx watch src/bin/index.ts",
     "lint": "eslint",
     "knip": "knip"

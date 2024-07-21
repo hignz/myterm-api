@@ -9,12 +9,13 @@ const errorConverter = (
   err: ApiError | Error,
   _req: Request,
   _res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   let error = err;
   if (!(error instanceof ApiError)) {
     // @ts-expect-error FIX ME
     const statusCode = error.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
+    // @ts-expect-error FIX ME
     const message = error.message || httpStatus[statusCode];
     error = new ApiError(statusCode, message, false, err.stack);
   }
