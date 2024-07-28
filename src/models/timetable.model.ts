@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 import day from './day.model.js';
 
 const timetableSchema = new mongoose.Schema(
@@ -25,7 +26,7 @@ const timetableSchema = new mongoose.Schema(
     },
     data: [[day.schema]],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const timetables = mongoose.model('Timetable', timetableSchema);
