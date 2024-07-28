@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import config from '../../config/config.js';
-import * as scraperService from '../../services/scraper.service.js';
+import { scrapeTimetable } from '../../services/scraper.service.js';
 import * as timetableService from '../../services/timetable.service.js';
 
 const app = new Hono();
@@ -31,7 +31,7 @@ app.get(
 
     // If timetable is not in the db, scrape and return it
     if (!timetable) {
-      const scrapedTimetable = await scraperService.scrapeTimetable(
+      const scrapedTimetable = await scrapeTimetable(
         courseCode,
         collegeIndex,
         semesterIndex,
@@ -53,7 +53,7 @@ app.get(
     const outOfDate =
       timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
     if (outOfDate) {
-      const scrapedTimetable = await scraperService.scrapeTimetable(
+      const scrapedTimetable = await scrapeTimetable(
         courseCode,
         collegeIndex,
         semesterIndex,

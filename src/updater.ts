@@ -6,7 +6,7 @@ async function updateCourseCodes() {
   try {
     const collegeCourses = (
       await Promise.all(
-        config.COLLEGE_URLS.map((url, index) => scrapeCourses(index)),
+        config.COLLEGE_URLS.map((_url, index) => scrapeCourses(index)),
       )
     ).reduce((courses, results) => courses.concat(results), []);
 
