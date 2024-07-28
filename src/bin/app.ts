@@ -12,7 +12,6 @@ import { updateCourseCodes } from './updater.js';
 import courseRoute from '../routes/v1/course.route.js';
 import docsRoute from '../routes/v1/docs.route.js';
 import timetableRoute from '../routes/v1/timetable.route.js';
-import type e from 'express';
 
 const app = express();
 
@@ -37,8 +36,8 @@ app.get('/ping', (req, res) => {
   res.status(200).send('OK');
 });
 
-app.use(({ next }: { next: e.NextFunction }) => {
-  next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
+app.use(({ next }) => {
+  next?.(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
 
 app.use(errorConverter);

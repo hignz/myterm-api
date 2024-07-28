@@ -32,7 +32,7 @@ const toTitleCase = (str: string) => {
     .toLowerCase()
     .split(' ')
     .map((word) => {
-      return word.charAt(0).toUpperCase() + word.substr(1);
+      return word.charAt(0).toUpperCase() + word.substring(1);
     })
     .join(' ');
 };
