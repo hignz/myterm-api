@@ -1,6 +1,7 @@
 import { zValidator } from '@hono/zod-validator';
 import { diff } from 'deep-object-diff';
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { z } from 'zod';
 
 import config from '../../config/config.js';
@@ -10,7 +11,7 @@ import * as timetableService from '../../services/timetable.service.js';
 const app = new Hono();
 
 app.get(
-  '/timetables',
+  '/',
   zValidator(
     'query',
     z.object({
@@ -20,75 +21,87 @@ app.get(
     }),
   ),
   async (c) => {
-    const courseCode = decodeURIComponent(c.req.valid('query').code);
-    const collegeIndex = c.req.valid('query').college;
-    const semesterIndex = c.req.valid('query').sem;
+    const { code, college, sem } = c.req.valid('query');
 
-    const timetable = await timetableService.getTimetableByCodeAndSemester(
-      courseCode,
-      semesterIndex,
-    );
-
-    // If timetable is not in the db, scrape and return it
-    if (!timetable) {
-      const scrapedTimetable = await scrapeTimetable(
-        courseCode,
-        collegeIndex,
-        semesterIndex,
+    try {
+      let timetable = await timetableService.getTimetableByCodeAndSemester(
+        code,
+        sem,
       );
 
-      if (!scrapedTimetable) {
-        return c.json({
-          timedout: true,
-        });
-      }
-
-      const newTimetable =
-        await timetableService.createTimetable(scrapedTimetable);
-
-      return c.json(newTimetable);
-    }
-
-    // If timetable in db is "old", rescrape and check for differences
-    const outOfDate =
-      timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
-    if (outOfDate) {
-      const scrapedTimetable = await scrapeTimetable(
-        courseCode,
-        collegeIndex,
-        semesterIndex,
-      );
-
-      if (!scrapedTimetable) {
-        Object.assign(timetable, {
-          timedout: true,
-        });
-
-        return c.json(timetable);
-      }
-
-      // if there is a difference in stored and freshly scraped timetables, update the db
-      // @ts-expect-error FIX ME
-      const difference = diff(scrapedTimetable.data, timetable.data);
-      if (Object.keys(difference).length) {
-        // logger.info(`[difference found]`);
-
-        const updatedTimetable = await timetableService.updateTimetable(
-          timetable._id,
-          scrapedTimetable,
-        );
-        return c.json(updatedTimetable);
+      // If timetable is not in the db, scrape and return it
+      if (!timetable) {
+        // @ts-expect-error FIX ME
+        timetable = await handleMissingTimetable(code, college, sem);
       } else {
-        // update timestamp
-        // logger.info(`updating timestamp`);
-        await timetableService.updateTimetable(timetable._id, {
-          updatedAt: new Date(),
-        });
+        timetable = await handleExistingTimetable(
+          timetable,
+          code,
+          college,
+          sem,
+        );
       }
-    }
 
-    return c.json(timetable);
+      return c.json(timetable);
+    } catch (error) {
+      if (error instanceof HTTPException) {
+        return c.json({ error: error.message }, error.status);
+      }
+      return c.json({ error: 'Internal server error' }, 500);
+    }
   },
 );
+
+async function handleMissingTimetable(
+  courseCode: string,
+  collegeIndex: string,
+  semesterIndex: string,
+) {
+  const scrapedTimetable = await scrapeTimetable(
+    courseCode,
+    collegeIndex,
+    semesterIndex,
+  );
+  if (!scrapedTimetable) {
+    throw new HTTPException(401, { message: 'Could not scrape timetable' });
+  }
+  return await timetableService.createTimetable(scrapedTimetable);
+}
+
+async function handleExistingTimetable(
+  // @ts-expect-error change to drizzle
+  timetable: Timetable,
+  courseCode: string,
+  collegeIndex: string,
+  semesterIndex: string,
+) {
+  const outOfDate =
+    timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
+
+  if (!outOfDate) return timetable;
+
+  const scrapedTimetable = await scrapeTimetable(
+    courseCode,
+    collegeIndex,
+    semesterIndex,
+  );
+
+  if (!scrapedTimetable?.data) {
+    return { ...timetable, timedout: true };
+  }
+
+  const difference = diff(scrapedTimetable.data, timetable.data);
+  if (Object.keys(difference).length) {
+    return await timetableService.updateTimetable(timetable._id, {
+      ...scrapedTimetable,
+      updatedAt: new Date(),
+    });
+  } else {
+    await timetableService.updateTimetable(timetable._id, {
+      updatedAt: new Date(),
+    });
+    return timetable;
+  }
+}
 
 export default app;

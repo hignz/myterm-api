@@ -1,5 +1,6 @@
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 import { z } from 'zod';
 
 import { getCoursesByCollegeId } from '../../services/course.service.js';
@@ -7,7 +8,7 @@ import { getCoursesByCollegeId } from '../../services/course.service.js';
 const app = new Hono();
 
 app.get(
-  '/courses',
+  '/',
   zValidator(
     'query',
     z.object({
@@ -16,8 +17,8 @@ app.get(
   ),
   async (c) => {
     const courses = await getCoursesByCollegeId(c.req.valid('query').college);
-    if (!courses || !courses.length) {
-      // throw new ApiError(httpStatus.NO_CONTENT, 'Courses not found');
+    if (!courses?.length) {
+      throw new HTTPException(404, { message: 'Courses not found' });
     }
     c.json(courses);
   },

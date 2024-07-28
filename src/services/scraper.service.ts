@@ -91,9 +91,7 @@ const scrapeTimetable = async (
   const url = generateUrl(urlPart, sem);
   const body = await fetchBody(url);
 
-  if (!body) {
-    return null;
-  }
+  if (!body) return null;
 
   const $ = cheerio.load(body);
 
@@ -135,18 +133,19 @@ const scrapeTimetable = async (
     let lastStartTime: string | undefined;
     timetable.data?.push([]);
     // Only days with class
+
     $(table)
       .children('tbody')
       .find('tr')
       .each((j, row) => {
         // Skip row with useless data
         if (j === 0) return;
-        const details: string[] = [];
-        $(row)
+
+        const details = $(row)
           .find('td')
-          .each((k, cell) => {
-            details.push($(cell).text());
-          });
+          .map((_, cell) => $(cell).text())
+          .get();
+
         if (
           lastEndTime !== null &&
           lastEndTime !== details[4] &&
