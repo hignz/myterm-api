@@ -18,16 +18,14 @@ app.use(cors());
 app.route('/timetables', timetables);
 app.route('/courses', courses);
 
-const port = 3001;
-
 mongoose.connect(env.DATABASE_URL).then(() => {
   // logger.info('MongoDB connection established');
   serve({
     fetch: app.fetch,
-    port,
+    port: env.PORT,
   });
 
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${env.PORT}`);
 });
 
 /**
