@@ -35,7 +35,7 @@ export default {
     //   TIMETABLE_URL: 'http://timetable.lit.ie:8080',
     // },
   ],
-  RESCRAPE_THRESHOLD: 1000 * 1,
+  RESCRAPE_THRESHOLD: 1000 * 60 * 5,
   // RESCRAPE_THRESHOLD: 1000 * 60 * 60 * 1,
   COURSE_UPDATE_INTERVAL: 1000 * 60 * 60 * 24,
 };

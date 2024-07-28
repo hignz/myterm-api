@@ -11,7 +11,12 @@ const getTimetable = catchAsync(async (req: Request, res: Response) => {
   const courseCode = decodeURIComponent(req.query.code as string);
   const collegeIndex = req.query.college as string;
   const semesterIndex = req.query.sem as string;
-  const timetable = await timetableService.getTimetableByCodeAndSemester(courseCode, semesterIndex);
+
+  const timetable = await timetableService.getTimetableByCodeAndSemester(
+    courseCode,
+    semesterIndex.toString(),
+  );
+
   // If timetable is not in the db, scrape and return it
   if (!timetable) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
@@ -33,7 +38,6 @@ const getTimetable = catchAsync(async (req: Request, res: Response) => {
 
   // If timetable in db is "old", rescrape and check for differences
   const outOfDate = timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
-
   if (outOfDate) {
     const scrapedTimetable = await scraperService.scrapeTimetable(
       courseCode,
@@ -59,6 +63,12 @@ const getTimetable = catchAsync(async (req: Request, res: Response) => {
         scrapedTimetable,
       );
       return res.send(updatedTimetable);
+    } else {
+      // update timestamp
+      logger.info(`updating timestamp`);
+      await timetableService.updateTimetable(timetable._id, {
+        updatedAt: new Date(),
+      });
     }
   }
 
