@@ -40,7 +40,7 @@ const daySchema = new mongoose.Schema(
       type: Number,
     },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const days = mongoose.model('Day', daySchema);

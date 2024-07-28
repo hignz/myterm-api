@@ -1,8 +1,11 @@
-import Timetable from '../models/timetable.model.js';
 import type { Types } from 'mongoose';
 
-const getTimetableByCodeAndSemester = async (courseCode: string, semester: string) =>
-  Timetable.findOne({ courseCode, semester }).lean();
+import Timetable from '../models/timetable.model.js';
+
+const getTimetableByCodeAndSemester = async (
+  courseCode: string,
+  semester: string,
+) => Timetable.findOne({ courseCode, semester }).lean();
 
 const getTimetableById = async (id: Types.ObjectId) => Timetable.findById(id);
 

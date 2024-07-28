@@ -1,10 +1,11 @@
 import { zValidator } from '@hono/zod-validator';
+import { diff } from 'deep-object-diff';
 import { Hono } from 'hono';
 import { z } from 'zod';
-import * as timetableService from '../../services/timetable.service.js';
-import * as scraperService from '../../services/scraper.service.js';
+
 import config from '../../config/config.js';
-import { diff } from 'deep-object-diff';
+import * as scraperService from '../../services/scraper.service.js';
+import * as timetableService from '../../services/timetable.service.js';
 
 const app = new Hono();
 
@@ -42,13 +43,15 @@ app.get(
         });
       }
 
-      const newTimetable = await timetableService.createTimetable(scrapedTimetable);
+      const newTimetable =
+        await timetableService.createTimetable(scrapedTimetable);
 
       return c.json(newTimetable);
     }
 
     // If timetable in db is "old", rescrape and check for differences
-    const outOfDate = timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
+    const outOfDate =
+      timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
     if (outOfDate) {
       const scrapedTimetable = await scraperService.scrapeTimetable(
         courseCode,

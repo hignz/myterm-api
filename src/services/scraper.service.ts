@@ -1,7 +1,8 @@
 import * as cheerio from 'cheerio';
 import puppeteer from 'puppeteer';
-import Course from '../models/course.model.js';
+
 import config from '../config/config.js';
+import Course from '../models/course.model.js';
 
 interface Timetable {
   data?: ((Day | null)[] | null)[] | null;
@@ -58,10 +59,9 @@ const generateSemesterUrl = (sem: string) => {
 };
 
 const generateUrl = (urlPart: string, sem: string) =>
-  `${config.COLLEGE_URLS[0]?.TIMETABLE_URL}${config.LIST_URL}${encodeURIComponent(urlPart).replace(
-    /_/g,
-    '%5F',
-  )}${generateSemesterUrl(sem)}`;
+  `${config.COLLEGE_URLS[0]?.TIMETABLE_URL}${config.LIST_URL}${encodeURIComponent(
+    urlPart,
+  ).replace(/_/g, '%5F')}${generateSemesterUrl(sem)}`;
 
 const fetchBody = async (url: string) => {
   const controller = new AbortController();
@@ -83,7 +83,11 @@ const fetchBody = async (url: string) => {
   }
 };
 
-const scrapeTimetable = async (urlPart: string, college: string, sem: string) => {
+const scrapeTimetable = async (
+  urlPart: string,
+  college: string,
+  sem: string,
+) => {
   const url = generateUrl(urlPart, sem);
   const body = await fetchBody(url);
 
@@ -93,7 +97,15 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
 
   const $ = cheerio.load(body);
 
-  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+  ];
 
   const course = await Course.findOne({
     course: encodeURIComponent(urlPart)
@@ -135,7 +147,11 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
           .each((k, cell) => {
             details.push($(cell).text());
           });
-        if (lastEndTime !== null && lastEndTime !== details[4] && lastStartTime !== details[3]) {
+        if (
+          lastEndTime !== null &&
+          lastEndTime !== details[4] &&
+          lastStartTime !== details[3]
+        ) {
           const difference =
             Math.abs(
               new Date(`01/01/1990 ${details[3]}`).getTime() -
@@ -150,7 +166,9 @@ const scrapeTimetable = async (urlPart: string, college: string, sem: string) =>
           activity: details[0],
           day: days[i],
           startTime: details[3],
-          name: toTitleCase(details[1]?.split('- ')[1] ?? details[1] ?? details[0] ?? ''),
+          name: toTitleCase(
+            details[1]?.split('- ')[1] ?? details[1] ?? details[0] ?? '',
+          ),
           room: details[7]?.trim() || 'N/A',
           type: details[2],
           teacher: details[8]?.replace(/,/g, ', ').replace(/ {2}/g, ' '),
@@ -188,7 +206,9 @@ const scrapeCourses = async (college: number) => {
   // Wait for the select element to be present and have options
   await page.waitForFunction(
     () => {
-      const select = document.querySelector('select[name=identifier]') as HTMLSelectElement;
+      const select = document.querySelector(
+        'select[name=identifier]',
+      ) as HTMLSelectElement;
       return select && select.options.length > 0;
     },
     { timeout: 10000 },
@@ -196,7 +216,9 @@ const scrapeCourses = async (college: number) => {
 
   const result = await page.evaluate((c) => {
     const data = [];
-    const select = document.querySelector('select[name=identifier]') as HTMLSelectElement;
+    const select = document.querySelector(
+      'select[name=identifier]',
+    ) as HTMLSelectElement;
     if (!select) return [];
 
     for (const option of Array.from(select.options)) {
