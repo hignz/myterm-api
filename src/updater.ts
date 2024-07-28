@@ -1,7 +1,6 @@
-import { scrapeCourses } from '../services/scraper.service.js';
-import config from '../config/config.js';
-import Course from '../models/course.model.js';
-import logger from '../config/logger.js';
+import { scrapeCourses } from './services/scraper.service.js';
+import config from './config/config.js';
+import Course from './models/course.model.js';
 
 async function updateCourseCodes() {
   try {
@@ -10,15 +9,15 @@ async function updateCourseCodes() {
     ).reduce((courses, results) => courses.concat(results), []);
 
     if (!collegeCourses || !collegeCourses.length) {
-      logger.error('No courses found');
+      // logger.error('No courses found');
       return;
     }
 
     await Course.deleteMany({});
     await Course.insertMany(collegeCourses);
-    logger.info('Updated course codes');
-  } catch (error) {
-    logger.error(error);
+    // logger.info('Updated course codes');
+  } catch {
+    // logger.error(error);
   }
 }
 

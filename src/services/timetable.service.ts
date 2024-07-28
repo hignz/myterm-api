@@ -1,6 +1,4 @@
-import httpStatus from 'http-status';
 import Timetable from '../models/timetable.model.js';
-import ApiError from '../utils/ApiError.js';
 import type { Types } from 'mongoose';
 
 const getTimetableByCodeAndSemester = async (courseCode: string, semester: string) =>
@@ -14,7 +12,7 @@ const getTimetableById = async (id: Types.ObjectId) => Timetable.findById(id);
 const updateTimetable = async (id: Types.ObjectId, data: unknown) => {
   const timetable = await getTimetableById(id);
   if (!timetable) {
-    throw new ApiError(httpStatus.NO_CONTENT, 'Could not find timetable to update');
+    throw new Error('Could not find timetable to update');
   }
 
   Object.assign(timetable, data);
