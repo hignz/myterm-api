@@ -51,14 +51,14 @@ const getCurrentSemester = () => {
   return 1;
 };
 
-const generateSemesterUrl = (sem: string) => {
-  if (!sem || (sem !== '0' && sem !== '1')) {
+const generateSemesterUrl = (sem: number) => {
+  if (!sem || (sem !== 0 && sem !== 1)) {
     return config.URL_PARTS[getCurrentSemester()];
   }
-  return config.URL_PARTS[parseInt(sem, 10)];
+  return config.URL_PARTS[sem];
 };
 
-const generateUrl = (urlPart: string, sem: string) =>
+const generateUrl = (urlPart: string, sem: number) =>
   `${config.COLLEGE_URLS[0]?.TIMETABLE_URL}${config.LIST_URL}${encodeURIComponent(
     urlPart,
   ).replace(/_/g, '%5F')}${generateSemesterUrl(sem)}`;
@@ -86,7 +86,7 @@ const fetchBody = async (url: string) => {
 const scrapeTimetable = async (
   urlPart: string,
   college: string,
-  sem: string,
+  sem: number,
 ) => {
   const url = generateUrl(urlPart, sem);
   const body = await fetchBody(url);
@@ -115,7 +115,7 @@ const scrapeTimetable = async (
   const timetable: Timetable = {
     courseCode: urlPart,
     url,
-    semester: parseInt(sem, 10) || getCurrentSemester(),
+    semester: sem ?? getCurrentSemester(),
     empty: false,
     college: config.COLLEGE_URLS[0]?.NAME ?? '',
     title: course?.title ?? urlPart,

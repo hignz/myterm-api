@@ -1,6 +1,9 @@
-import Course from '../models/course.model.js';
+import { eq } from 'drizzle-orm';
+
+import { db } from '../db/index.js';
+import { courseTable } from '../db/schema.js';
 
 const getCoursesByCollegeId = async (id: string) =>
-  Course.find({ college: id }).lean();
+  db.select().from(courseTable).where(eq(courseTable.college, id));
 
 export { getCoursesByCollegeId };

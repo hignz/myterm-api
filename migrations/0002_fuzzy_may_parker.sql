@@ -1,0 +1,1 @@
+ALTER TABLE `timetable` ADD `updatedAt` text DEFAULT (CURRENT_TIMESTAMP);

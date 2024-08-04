@@ -5,6 +5,7 @@ import { HTTPException } from 'hono/http-exception';
 import { z } from 'zod';
 
 import config from '../../config/config.js';
+import type { InsertTimetable } from '../../db/schema.js';
 import { scrapeTimetable } from '../../services/scraper.service.js';
 import * as timetableService from '../../services/timetable.service.js';
 
@@ -17,7 +18,7 @@ app.get(
     z.object({
       college: z.string(),
       code: z.string(),
-      sem: z.string(),
+      sem: z.coerce.number().min(0).max(1),
     }),
   ),
   async (c) => {
@@ -55,7 +56,7 @@ app.get(
 async function handleMissingTimetable(
   courseCode: string,
   collegeIndex: string,
-  semesterIndex: string,
+  semesterIndex: number,
 ) {
   const scrapedTimetable = await scrapeTimetable(
     courseCode,
@@ -69,14 +70,14 @@ async function handleMissingTimetable(
 }
 
 async function handleExistingTimetable(
-  // @ts-expect-error change to drizzle
-  timetable: Timetable,
+  timetable: InsertTimetable,
   courseCode: string,
   collegeIndex: string,
-  semesterIndex: string,
+  semesterIndex: number,
 ) {
   const outOfDate =
-    timetable.updatedAt.getTime() < Date.now() - config.RESCRAPE_THRESHOLD;
+    new Date(timetable.updatedAt ?? new Date()).getTime() <
+    Date.now() - config.RESCRAPE_THRESHOLD;
 
   if (!outOfDate) return timetable;
 
@@ -94,11 +95,10 @@ async function handleExistingTimetable(
   if (Object.keys(difference).length) {
     return await timetableService.updateTimetable(timetable._id, {
       ...scrapedTimetable,
-      updatedAt: new Date(),
     });
   } else {
     await timetableService.updateTimetable(timetable._id, {
-      updatedAt: new Date(),
+      updatedAt: new Date().toString(),
     });
     return timetable;
   }

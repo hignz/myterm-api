@@ -1,5 +1,6 @@
 import config from './config/config.js';
-import Course from './models/course.model.js';
+import { db } from './db/index.js';
+import { courseTable } from './db/schema.js';
 import { scrapeCourses } from './services/scraper.service.js';
 
 async function updateCourseCodes() {
@@ -15,8 +16,18 @@ async function updateCourseCodes() {
       return;
     }
 
-    await Course.deleteMany({});
-    await Course.insertMany(collegeCourses);
+    await db.delete(courseTable);
+
+    await db.insert(courseTable).values(
+      collegeCourses.map((course) => ({
+        course: decodeURIComponent(course.course),
+        title: course.title,
+        college: course.college.toString(),
+      })),
+    );
+
+    // await Course.deleteMany({});
+    // await Course.insertMany(collegeCourses);
     // logger.info('Updated course codes');
   } catch {
     // logger.error(error);

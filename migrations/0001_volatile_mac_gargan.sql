@@ -1,0 +1,1 @@
+ALTER TABLE `day` ADD `updatedAt` text DEFAULT (CURRENT_TIMESTAMP);

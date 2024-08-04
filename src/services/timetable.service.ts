@@ -1,26 +1,26 @@
-import { HTTPException } from 'hono/http-exception';
-import type { Types } from 'mongoose';
+import { and, eq } from 'drizzle-orm';
 
-import Timetable from '../models/timetable.model.js';
+import { db } from '../db/index.js';
+import {
+  timetableTable,
+  type InsertTimetable,
+  type SelectTimetable,
+} from '../db/schema.js';
 
 const getTimetableByCodeAndSemester = async (
-  courseCode: string,
-  semester: string,
-) => Timetable.findOne({ courseCode, semester }).lean();
+  courseCode: SelectTimetable['courseCode'],
+  semester: SelectTimetable['semester'],
+) =>
+  db.query.
 
-const getTimetableById = async (id: Types.ObjectId) => Timetable.findById(id);
-
-const updateTimetable = async (id: Types.ObjectId, data: unknown) => {
-  const timetable = await getTimetableById(id);
-  if (!timetable) {
-    throw new HTTPException(404, { message: 'Timetable not found' });
-  }
-
-  Object.assign(timetable, data);
-  await timetable.save();
-  return timetable;
+const updateTimetable = async (
+  id: SelectTimetable['id'],
+  data: Partial<Omit<SelectTimetable, 'id'>>,
+) => {
+  await db.update(timetableTable).set(data).where(eq(timetableTable.id, id));
 };
 
-const createTimetable = async (data: unknown) => Timetable.create(data);
+const createTimetable = async (data: InsertTimetable) =>
+  await db.insert(timetableTable).values(data);
 
 export { createTimetable, getTimetableByCodeAndSemester, updateTimetable };
