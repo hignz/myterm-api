@@ -1,11 +1,14 @@
 import { zValidator } from '@hono/zod-validator';
-import { diff } from 'deep-object-diff';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { z } from 'zod';
 
-import config from '../../config/config.js';
-import type { InsertTimetable } from '../../db/schema.js';
+import { db } from '../../db/index.js';
+import {
+  timetableEvents,
+  timetableTable,
+  type InsertTimetableEvent,
+} from '../../db/schema.js';
 import { scrapeTimetable } from '../../services/scraper.service.js';
 import * as timetableService from '../../services/timetable.service.js';
 
@@ -25,24 +28,23 @@ app.get(
     const { code, college, sem } = c.req.valid('query');
 
     try {
-      let timetable = await timetableService.getTimetableByCodeAndSemester(
+      const timetable = await timetableService.getTimetableByCodeAndSemester(
         code,
         sem,
       );
 
       // If timetable is not in the db, scrape and return it
       if (!timetable) {
-        // @ts-expect-error FIX ME
-        timetable = await handleMissingTimetable(code, college, sem);
-      } else {
-        timetable = await handleExistingTimetable(
-          timetable,
+        console.log('>>>> timetable not found, scraping');
+        const scrapedTimetable = await handleMissingTimetable(
           code,
           college,
           sem,
         );
+        return c.json(scrapedTimetable);
       }
 
+      console.log('>>>> found timetable and returning it');
       return c.json(timetable);
     } catch (error) {
       if (error instanceof HTTPException) {
@@ -63,45 +65,59 @@ async function handleMissingTimetable(
     collegeIndex,
     semesterIndex,
   );
+  console.log('scraped', scrapedTimetable?.title);
   if (!scrapedTimetable) {
     throw new HTTPException(401, { message: 'Could not scrape timetable' });
   }
-  return await timetableService.createTimetable(scrapedTimetable);
-}
 
-async function handleExistingTimetable(
-  timetable: InsertTimetable,
-  courseCode: string,
-  collegeIndex: string,
-  semesterIndex: number,
-) {
-  const outOfDate =
-    new Date(timetable.updatedAt ?? new Date()).getTime() <
-    Date.now() - config.RESCRAPE_THRESHOLD;
+  return await db.transaction(async (tx) => {
+    console.log('>>>> inserting timetable');
 
-  if (!outOfDate) return timetable;
+    const newTimetable = await tx
+      .insert(timetableTable)
+      .values({
+        college: scrapedTimetable.college,
+        courseCode: scrapedTimetable.courseCode,
+        semester: scrapedTimetable.semester,
+        title: scrapedTimetable.title,
+        empty: scrapedTimetable.empty,
+        url: scrapedTimetable.url,
+      })
+      .returning()
+      .get();
 
-  const scrapedTimetable = await scrapeTimetable(
-    courseCode,
-    collegeIndex,
-    semesterIndex,
-  );
+    if (!newTimetable) {
+      throw new Error('Could not create timetable');
+    }
 
-  if (!scrapedTimetable?.data) {
-    return { ...timetable, timedout: true };
-  }
+    // Prepare all event inserts
+    const eventInserts = scrapedTimetable.data?.flatMap((dayData, dayIndex) =>
+      dayData?.map(
+        (item) =>
+          ({
+            timetableId: newTimetable.id,
+            dayOfWeek: dayIndex,
+            activity: item?.activity,
+            startTime: item?.startTime,
+            endTime: item?.endTime,
+            name: item?.name,
+            room: item?.room,
+            type: item?.type,
+            teacher: item?.teacher,
+          }) as InsertTimetableEvent,
+      ),
+    );
 
-  const difference = diff(scrapedTimetable.data, timetable.data);
-  if (Object.keys(difference).length) {
-    return await timetableService.updateTimetable(timetable._id, {
-      ...scrapedTimetable,
-    });
-  } else {
-    await timetableService.updateTimetable(timetable._id, {
-      updatedAt: new Date().toString(),
-    });
-    return timetable;
-  }
+    if (!eventInserts) {
+      throw new Error('Could not create events');
+    }
+
+    console.log('>>>> inserting events');
+    // Insert all events at once
+    await tx.insert(timetableEvents).values(eventInserts);
+
+    return newTimetable;
+  });
 }
 
 export default app;

@@ -1,42 +1,21 @@
-<h1 align="center">Welcome to myterm-api 👋</h1>
-<p>
-  <img src="https://img.shields.io/badge/version-1.0.2-blue.svg?cacheSeconds=2592000" />
-  <img src="https://img.shields.io/badge/node-10.12.0-blue.svg" />
-</p>
+# MyTerm API
 
-> REST API to retrieve various Irish Institutions timetables
+MyTerm API is a REST API designed to retrieve timetables from various Irish Institutions.
 
-### 🏠 [Homepage](https://github.com/hignz/itsligo-utils)
+## Version
+
+1.0.3
+
+## Description
+
+This API provides endpoints to fetch and manage timetable data for different educational institutions in Ireland. It's built with TypeScript.
 
 ## Prerequisites
 
-- node 10.12.0
+- Node.js (v20.10.0)
+- pnpm (v9.5.0)
 
-## Install
+## Installation
 
-```sh
-npm install
-```
-
-## Usage
-
-```sh
-npm run start
-```
-
-## Author
-
-👤 **hignz**
-
-* Github: [@hignz](https://github.com/hignz)
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/hignz/itsligo-utils/issues).
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+1. Clone the repository
+2. Install dependencies:

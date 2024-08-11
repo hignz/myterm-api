@@ -1,5 +1,5 @@
 import { serve } from '@hono/node-server';
-import { CronJob } from 'cron';
+// import { CronJob } from 'cron';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -8,7 +8,8 @@ import { secureHeaders } from 'hono/secure-headers';
 import { env } from './env.js';
 import courses from './routes/v1/courses.js';
 import timetables from './routes/v1/timetables.js';
-import { updateCourseCodes } from './updater.js';
+
+// import { updateCourseCodes } from './updater.js';
 
 const app = new Hono();
 

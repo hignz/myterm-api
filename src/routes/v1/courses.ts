@@ -20,7 +20,7 @@ app.get(
     if (!courses?.length) {
       throw new HTTPException(404, { message: 'Courses not found' });
     }
-    c.json(courses);
+    return c.json(courses);
   },
 );
 

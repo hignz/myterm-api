@@ -1,6 +1,6 @@
 {
   "name": "myterm-api",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "REST API to retrieve timetables from various Irish Institutions",
   "main": "src/index.ts",
   "scripts": {
@@ -16,28 +16,27 @@
   "dependencies": {
     "@hono/node-server": "^1.12.0",
     "@hono/zod-validator": "^0.2.2",
-    "@libsql/client": "^0.7.0",
-    "cheerio": "1.0.0-rc.12",
+    "@libsql/client": "^0.8.1",
+    "cheerio": "1.0.0",
     "cron": "^3.1.7",
     "deep-object-diff": "^1.1.9",
-    "drizzle-orm": "^0.32.1",
-    "hono": "^4.5.2",
-    "mongoose": "^8.5.1",
-    "puppeteer": "^22.14.0",
+    "drizzle-orm": "^0.32.2",
+    "hono": "^4.5.5",
+    "puppeteer": "^22.15.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
+    "@eslint/js": "^9.9.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
-    "@types/node": "^20.14.13",
-    "drizzle-kit": "^0.23.0",
+    "@types/node": "^20.14.15",
+    "drizzle-kit": "^0.23.2",
     "eslint": "~9.7.0",
-    "globals": "^15.8.0",
-    "knip": "^5.27.0",
+    "globals": "^15.9.0",
+    "knip": "^5.27.2",
     "prettier": "^3.3.3",
-    "tsx": "^4.16.2",
+    "tsx": "^4.17.0",
     "typescript": "^5.5.4",
-    "typescript-eslint": "8.0.0-alpha.48"
+    "typescript-eslint": "8.0.1"
   },
   "engines": {
     "node": "20.10.0",

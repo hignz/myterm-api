@@ -1,32 +1,14 @@
 import * as cheerio from 'cheerio';
+import { eq } from 'drizzle-orm';
 import puppeteer from 'puppeteer';
 
 import config from '../config/config.js';
-import Course from '../models/course.model.js';
-
-interface Timetable {
-  data?: ((Day | null)[] | null)[] | null;
-  empty: boolean;
-  courseCode: string;
-  url: string;
-  semester: number;
-  college: string;
-  title: string;
-}
-
-interface Day {
-  activity?: string | null;
-  day?: string | null;
-  startTime?: string | null;
-  name?: string | null;
-  room?: string | null;
-  type?: string | null;
-  teacher?: string | null;
-  length?: string | null;
-  endTime?: string | null;
-  break?: boolean | null;
-  breakLength?: number | null;
-}
+import { db } from '../db/index.js';
+import {
+  courseTable,
+  type InsertTimetable,
+  type InsertTimetableEvent,
+} from '../db/schema.js';
 
 const toTitleCase = (str: string) => {
   return str
@@ -74,6 +56,7 @@ const fetchBody = async (url: string) => {
     const response = await fetch(url, { signal: controller.signal });
     return await response.text();
   } catch (error) {
+    console.log(error);
     // @ts-expect-error narrow error
     if (error.name === 'AbortError') {
       return null;
@@ -88,38 +71,53 @@ const scrapeTimetable = async (
   college: string,
   sem: number,
 ) => {
+  console.log('scraping');
   const url = generateUrl(urlPart, sem);
+  console.log(url);
   const body = await fetchBody(url);
 
   if (!body) return null;
 
   const $ = cheerio.load(body);
 
-  const days = [
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-    'Sunday',
-  ];
+  // const days = [
+  //   'Monday',
+  //   'Tuesday',
+  //   'Wednesday',
+  //   'Thursday',
+  //   'Friday',
+  //   'Saturday',
+  //   'Sunday',
+  // ];
 
-  const course = await Course.findOne({
-    course: encodeURIComponent(urlPart)
-      .replace(/_/g, '%5F')
-      .replace(/\(/g, '%28')
-      .replace(/\)/g, '%29'),
-  }).lean();
+  const course = await db
+    .select()
+    .from(courseTable)
+    .where(
+      eq(
+        courseTable.course,
+        encodeURIComponent(urlPart)
+          .replace(/_/g, '%5F')
+          .replace(/\(/g, '%28')
+          .replace(/\)/g, '%29'),
+      ),
+    )
+    .then((r) => r[0]);
 
-  const timetable: Timetable = {
+  console.log(course);
+
+  const timetable: InsertTimetable & {
+    data?: [Omit<InsertTimetableEvent, 'timetableId'>[]];
+  } = {
     courseCode: urlPart,
     url,
     semester: sem ?? getCurrentSemester(),
     empty: false,
     college: config.COLLEGE_URLS[0]?.NAME ?? '',
     title: course?.title ?? urlPart,
+    // @ts-expect-error fix me
     data: [],
+    // data: [],
   };
 
   // Get top level tables
@@ -129,8 +127,8 @@ const scrapeTimetable = async (
 
   // Each day
   $(tables).each((i, table) => {
-    let lastEndTime: string | undefined;
-    let lastStartTime: string | undefined;
+    // let lastEndTime: string | undefined;
+    // let lastStartTime: string | undefined;
     timetable.data?.push([]);
     // Only days with class
 
@@ -146,37 +144,42 @@ const scrapeTimetable = async (
           .map((_, cell) => $(cell).text())
           .get();
 
-        if (
-          lastEndTime !== null &&
-          lastEndTime !== details[4] &&
-          lastStartTime !== details[3]
-        ) {
-          const difference =
-            Math.abs(
-              new Date(`01/01/1990 ${details[3]}`).getTime() -
-                new Date(`01/01/1990 ${lastEndTime}`).getTime(),
-            ) / 60000;
-          if (difference > 0) {
-            timetable.data?.[i]?.push({ break: true, breakLength: difference });
-          }
-        }
+        // if (
+        //   lastEndTime !== null &&
+        //   lastEndTime !== details[4] &&
+        //   lastStartTime !== details[3]
+        // ) {
+        //   const difference =
+        //     Math.abs(
+        //       new Date(`01/01/1990 ${details[3]}`).getTime() -
+        //         new Date(`01/01/1990 ${lastEndTime}`).getTime(),
+        //     ) / 60000;
+        //   if (difference > 0) {
+        //     timetable.data?.[i]?.push({
+        //       isBreak: true,
+        //       startTime: lastEndTime,
+        //       endTime: details[4],
+        //     });
+        //   }
+        // }
 
         timetable.data?.[i]?.push({
-          activity: details[0],
-          day: days[i],
-          startTime: details[3],
+          dayOfWeek: i,
+          activity: details[0] ?? '',
+          startTime: details[3] ?? '',
+          endTime: details[4] ?? '',
           name: toTitleCase(
             details[1]?.split('- ')[1] ?? details[1] ?? details[0] ?? '',
           ),
           room: details[7]?.trim() || 'N/A',
           type: details[2],
           teacher: details[8]?.replace(/,/g, ', ').replace(/ {2}/g, ' '),
-          length: details[5],
-          endTime: details[4],
         });
 
-        lastEndTime = details[4];
-        lastStartTime = details[3];
+        console.log(timetable);
+
+        // lastEndTime = details[4];
+        // lastStartTime = details[3];
       });
   });
 

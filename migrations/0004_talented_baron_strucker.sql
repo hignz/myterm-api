@@ -1,0 +1,1 @@
+ALTER TABLE `timetable` RENAME COLUMN `createdAt` TO `created_at`;

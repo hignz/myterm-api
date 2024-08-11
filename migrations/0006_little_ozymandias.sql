@@ -1,0 +1,1 @@
+ALTER TABLE `timetable_events` DROP COLUMN `is_break`;
