@@ -1,20 +1,19 @@
-import httpStatus from 'http-status';
-import Timetable from '../models/timetable.model.js';
-import ApiError from '../utils/ApiError.js';
+import { HTTPException } from 'hono/http-exception';
 import type { Types } from 'mongoose';
 
-const getTimetableByCodeAndSemester = async (courseCode: string, semester: string) =>
-  Timetable.findOne({ courseCode, semester }).lean();
+import Timetable from '../models/timetable.model.js';
+
+const getTimetableByCodeAndSemester = async (
+  courseCode: string,
+  semester: string,
+) => Timetable.findOne({ courseCode, semester }).lean();
 
 const getTimetableById = async (id: Types.ObjectId) => Timetable.findById(id);
-
-// const updateTimetable = async (courseCode, semester, scrapedTimetable) =>
-//   Timetable.findOneAndUpdate({ courseCode, semester }, scrapedTimetable, { new: true });
 
 const updateTimetable = async (id: Types.ObjectId, data: unknown) => {
   const timetable = await getTimetableById(id);
   if (!timetable) {
-    throw new ApiError(httpStatus.NO_CONTENT, 'Could not find timetable to update');
+    throw new HTTPException(404, { message: 'Timetable not found' });
   }
 
   Object.assign(timetable, data);
